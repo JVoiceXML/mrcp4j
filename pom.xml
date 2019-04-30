@@ -6,7 +6,7 @@
   <artifactId>mrcp4j</artifactId>
   <packaging>jar</packaging>
   <name>MRCP4J</name>
-  <version>SNAPSHOT</version>
+  <version>0.3-SNAPSHOT</version>
   <description>MRCP4J provides a Java API that encapsulates the MRCPv2 protocol and can be used to implement MRCP clients and/or servers.</description>
   <url>git@github.com:JVoiceXML/mrcp4j.git</url>
   <inceptionYear>2005</inceptionYear>
@@ -89,7 +89,7 @@
   <build>
     <directory>target</directory>
     <outputDirectory>target/classes</outputDirectory>
-    <finalName>${artifactId}-${version}</finalName>
+    <finalName>${project.artifactId}-${project.version}</finalName>
     <testOutputDirectory>target/test-classes</testOutputDirectory>
     <sourceDirectory>src/main/java</sourceDirectory>
     <scriptSourceDirectory>src/main/scripts</scriptSourceDirectory>

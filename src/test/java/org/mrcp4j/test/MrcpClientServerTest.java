@@ -43,7 +43,6 @@ import org.mrcp4j.message.request.StopRequest;
 import org.mrcp4j.server.MrcpServerSocket;
 import org.mrcp4j.server.MrcpSession;
 import org.mrcp4j.server.provider.RecogOnlyRequestHandler;
-import org.mrcp4j.test.util.MrcpTestUtil;
 
 public class MrcpClientServerTest {
 
@@ -56,8 +55,6 @@ public class MrcpClientServerTest {
     // so instead explicitly call the method in each test
     @Before
     public void setUp() throws Exception {
-
-        MrcpTestUtil.configureLog4j(this);
 
         if (_mrcpServer != null) // TODO: shutdown server in tear down method instead
             return;
