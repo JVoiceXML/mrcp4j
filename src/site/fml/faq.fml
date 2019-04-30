@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<faqs id="General FAQ">
+  <part id="General">
+    <faq id="WhatIsMRCPv2">
+      <question>What is MRCPv2?</question>
+      <answer>
+        <p>
+          MRCPv2 stands for Media Resource Control Protocol Version 2 and is a protocol being developed by the Speech Services
+          Control Working Group (<a href="http://www.ietf.org/html.charters/speechsc-charter.html" target="_blank">Speechsc</a>)
+          of the Internet Engineering Task Force (<a href="http://www.ietf.org" target="_blank">IETF</a>) to allow client hosts to
+          control media processing resources such as speech synthesizers, speech recognizers, speaker
+          verifiers and speaker identifiers residing in servers on the network.
+        </p>
+        <p>
+          You can read the full text of the latest MRCPv2 draft <a href="http://tools.ietf.org/html/draft-ietf-speechsc-mrcpv2" target="_blank">here</a>.
+        </p>
+      </answer>
+    </faq>
+    <faq id="WhyNoSipSupport">
+      <question>Why doesn't MRCP4J provide facilities for establishing MRCPv2 sessions?</question>
+      <answer>
+        <p>
+          Currently this functionality is beyond the scope of this project. Just as the MRCPv2 protocol relies on a session management
+          protocol such as the Session Initiation Protocol (SIP) to establish the MRCPv2 control session between the client
+          and the server, MRCP4J clients should make use of an appropriate SIP API implementation (such as
+          <a href="http://jain-sip.dev.java.net/" target="_blank">JAIN-SIP</a>) to supply this functionality.
+        </p>
+      </answer>
+    </faq>
+  </part>
+</faqs>

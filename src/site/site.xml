@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<project name="mrcp4j">
+
+  <bannerLeft>
+    <name>SpeechForge Banner</name>
+    <src>images/speechforge-banner.jpg</src>
+    <href>http://www.speechforge.org</href>
+  </bannerLeft>
+
+  <bannerRight>
+    <name>SourceForge.net Logo</name>
+    <src>http://sflogo.sourceforge.net/sflogo.php?group_id=143504&amp;type=5</src>
+    <href>http://sourceforge.net/</href>
+  </bannerRight>
+
+  <body>
+
+    <links>
+      <item name="Cairo" href="../cairo/index.html"/>
+      <item name="MRCP4J" href="index.html"/>
+      <item name="SpeechForge Home" href="../../index.html"/>
+    </links>
+
+    <menu name="MRCP4J">
+      <item name="Overview" href="index.html"/>
+      <item name="Installation" href="install.html"/>
+      <item name="Getting Started" href="intro.html">
+        <item name="Implementing an MRCPv2 Client" href="intro.html#Client"/>
+        <item name="Implementing an MRCPv2 Server" href="intro.html#Server"/>
+      </item>
+      <item name="FAQ" href="faq.html"/>
+      <item name="Documentation" href="doc.html">
+        <item name="API Documentation" href="docs/apidocs/index.html?overview-summary.html"/>
+        <item name="Change Log" href="changelog.html"/>
+      </item>
+      <item name="MRCPv2 Specification" href="http://tools.ietf.org/html/draft-ietf-speechsc-mrcpv2"/>
+      <item name="Issue Tracking" href="http://www.speechforge.org:8080/jira/secure/Dashboard.jspa"/>
+    </menu>
+
+    <menu name="Project Documentation">
+      <!--item name="Project Page" href="http://sourceforge.net/projects/mrcp4j"/-->
+      <item name="Project Info" href="project-info.html" collapse="false">
+        <item name="Dependencies" href="dependencies.html"/>
+        <item name="Mailing Lists" href="mail-lists.html"/>
+        <item name="Project License" href="license.html"/>
+        <item name="Project Team" href="team-list.html"/>
+        <item name="Source Repository" href="source-repository.html"/>
+      </item>
+    </menu>
+
+  </body>
+
+</project>

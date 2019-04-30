@@ -1,0 +1,47 @@
+                       -----
+                      Overview
+                       -----
+                  Niels Godfredsen
+                       -----
+
+Welcome to MRCP4J
+
+ MRCP4J provides a Java API that encapsulates the MRCPv2 protocol and can be used to implement MRCPv2 clients and/or servers. 
+
+What is MRCPv2?
+
+  Media Resource Control Protocol Version 2 is a protocol being developed by the Speech Services Control Working Group 
+  ({{{http://www.ietf.org/html.charters/speechsc-charter.html}Speechsc}}) of the Internet Engineering Task Force
+  ({{{http://www.ietf.org}IETF}}) to allow client hosts to control media processing resources such as speech synthesizers,
+  speech recognizers, speaker verifiers and speaker identifiers residing in servers on the network.
+
+  From the introduction of the MRCPv2 draft specification:
+
+-------------------
+The MRCPv2 protocol is designed to allow a client device to control
+media processing resources on the network.  Some of these media
+processing resources include speech recognition engines, speech
+synthesis engines, speaker verification and speaker identification
+engines.  MRCPv2 enables the implementation of distributed
+Interactive Voice Response platforms using VoiceXML browsers or
+other client applications while maintaing separate back-end speech
+processing capabilities on specialized speech processing servers.
+MRCPv2 is based on the earlier Media Resource Control Protocol (MRCP)
+developed jointly by Cisco Systems, Inc., Nuance Communications,
+and Speechworks Inc.
+-------------------
+
+  You can read the full text of the latest MRCPv2 draft {{{http://tools.ietf.org/html/draft-ietf-speechsc-mrcpv2}here}}.
+
+Latest News
+
+*MRCP4J v0.2 Released - August 30, 2006
+
+  "The MRCPv2 protocol is designed to allow client devices to control
+  media processing resources, such as speech recognition engines. MRCP4J
+  provides a Java API that encapsulates the MRCPv2 protocol and can be
+  used to implement MRCPv2 clients and/or servers.
+
+  This release provides the same basic level of functional support as
+  the previous release but has been more thoroughly tested. A number of
+  issues found in the previous release have been addressed..." ({{{http://www.freelists.org/archives/speechforge-news/08-2006/msg00000.html}more}})

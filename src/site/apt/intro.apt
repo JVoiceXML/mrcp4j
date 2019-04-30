@@ -1,0 +1,44 @@
+                       -----
+                  Getting Started
+                       -----
+                  Niels Godfredsen
+                       -----
+
+Getting Started
+
+  MRCP4J can be used for implementing both MRCPv2 clients as well as MRCPv2 servers.
+
+  The following instructions assume you have already downloaded and installed the latest MRCP4J jar file.  Instructions for downloading and installation can be found {{{install.html}here}}.
+
+Implementing an MRCPv2 {Client}
+
+  The primary class for implementing MRCPv2 clients using MRCP4J is {{{docs/apidocs/org/mrcp4j/client/MrcpChannel.html}org.mrcp4j.client.MrcpChannel}}. All main client functions, such as sending requests to media resources and registering to listen for events from media resources, are available through this class.
+
+  To construct a new MrcpChannel instance use {{{docs/apidocs/org/mrcp4j/client/MrcpProvider.html#createChannel(java.lang.String,%20java.net.InetAddress,%20int,%20java.lang.String)}MrcpProvider.createChannel()}}.
+
+  For example:
+
++-----------------------+
+    String channelID = "32AECB234338@speechrecog";
+    InetAddress host = InetAddress.getByName("server.example.com");
+    int port = 32416;
+    String protocol = MrcpProvider.PROTOCOL_TCP_MRCPv2; // "TCP/MRCPv2"
+
+    MrcpFactory factory = MrcpFactory.newInstance();
+    MrcpProvider provider = factory.createProvider();
+    MrcpChannel channel = provider.createChannel(channelID, host, port, protocol);
+
+    MrcpRequest request = channel.createRequest(MrcpMethodName.RECOGNIZE);
+    request.setContent("application/jsgf", null, grammarUrl);
+    MrcpResponse response = channel.sendRequest(request);
++-----------------------+
+
+  Note: If you are wondering where the channel ID and other parameters come from please see the {{{faq.html#WhyNoSipSupport}FAQ: Why doesn't MRCP4J provide facilities for establishing MRCPv2 sessions?}}.
+
+~~MRCP4J does not provide facilities for establishing the media channels to the media
+
+
+
+Implementing an MRCPv2 {Server}
+
+  TODOC

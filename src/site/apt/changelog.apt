@@ -1,0 +1,33 @@
+                       -----
+                     Change Log
+                       -----
+                  Niels Godfredsen
+                       -----
+
+
+Change Log for MRCP4J
+
+* MRCP4J {v0.2}
+
+  * Fix potential deadlock in event queue timeout scenario.
+
+  * Remove redundant signal for event queue completion which was causing MrcpSession.postEvent() to hang.
+
+  * Use commons-logging for debug output instead of System.out.println() statements.
+
+  * Use commons-logging for MRCP session logging instead of MINA session log.
+
+  * Update MINA dependency from version 0.7.2 to version 0.8.0.
+
+  * Add value factories for some of the more commonly used MRCP headers.
+
+  * Preserve the order of MRCP headers to be the same as the order they are added in.
+
+  * Calculate and set message-length during encoding of MRCP messages.
+
+  * Terminate message content with CRLF and include in calculation of content-length header value.
+
+
+* MRCP4J {v0.1}
+
+  No prior release to compare with.

@@ -1,0 +1,36 @@
+                       -----
+                    Installation
+                       -----
+                  Niels Godfredsen
+                       -----
+
+{Downloads}
+
+  The latest version of MRCP4J can be downloaded {{{http://sourceforge.net/project/showfiles.php?group_id=143504}here}}.
+
+{Prerequisites}
+
+  MRCP4J requires Java Runtime Environment (JRE) 5.0 or higher which can be downloaded {{{http://java.sun.com/javase/downloads/index.jsp}here}}.
+
+{Dependencies}
+
+  MRCP4J has the following dependencies:
+
+*--------------------+-------------+------------------------------------------------------+
+| <Project>          | <Version>   | <Download URL>                                       |
+*--------------------+-------------+------------------------------------------------------+
+| Commons Logging    | 1.1         | {{http://jakarta.apache.org/commons/logging/}}       |
+*--------------------+-------------+------------------------------------------------------+
+| MINA               | 0.8.0       | {{http://directory.apache.org/subprojects/network/}} |
+*--------------------+-------------+------------------------------------------------------+
+| SLF4J              | 1.0-beta9   | {{http://www.slf4j.org/}}                            |
+*--------------------+-------------+------------------------------------------------------+
+
+  Distribution jars for the above listed dependencies need to be included in your classpath in order to use MRCP4J.  They are available for download from the provided URLs and are also included in the MRCP4J binary distribution.
+
+  Note: The dependency versions listed above are as required for the latest release of MRCP4J.  If you are using an earlier version of MRCP4J (or a pre-release snapshot build), please see the readme in the distribution for the required dependencies and versions.
+
+{Installation}
+
+  To install MRCP4J extract the <<<mrcp4j-\<version\>.jar>>> from the binary distribution archive and
+  add it to your application's classpath along with the above listed dependencies.
