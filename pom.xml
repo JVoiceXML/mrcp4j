@@ -191,16 +191,15 @@
   </build>
 
   <dependencies>
-    <dependency>
-      <groupId>directory-network</groupId>
-      <artifactId>mina</artifactId>
-      <version>0.8.0</version>
-      <scope>compile</scope>
-    </dependency>
+	<dependency>
+    	<groupId>org.apache.mina</groupId>
+    	<artifactId>mina-core</artifactId>
+    	<version>2.1.2</version>
+	</dependency>
     <dependency>
       <groupId>commons-logging</groupId>
       <artifactId>commons-logging</artifactId>
-      <version>1.1.1</version>
+      <version>1.2</version>
       <scope>compile</scope>
     </dependency>
     <dependency>

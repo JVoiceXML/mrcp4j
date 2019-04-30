@@ -22,6 +22,13 @@
  */
 package org.mrcp4j.client;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.mrcp4j.MrcpMethodName;
 import org.mrcp4j.message.MrcpEvent;
 import org.mrcp4j.message.MrcpMessage;
@@ -32,15 +39,6 @@ import org.mrcp4j.message.header.MrcpHeader;
 import org.mrcp4j.message.header.MrcpHeaderName;
 import org.mrcp4j.message.request.MrcpRequest;
 import org.mrcp4j.message.request.MrcpRequestFactory;
-import org.mrcp4j.message.request.MrcpRequestFactory.UnimplementedRequest;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 /**
  * Provides all primary functionality required for an MRCPv2 client to interact with an MRCPv2 resource.  Through an instance of this class
