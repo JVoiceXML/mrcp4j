@@ -66,6 +66,15 @@
       </roles>
       <timezone>-8</timezone>
     </developer>
+    <developer>
+      <id>dirk</id>
+      <name>Dirk Schnelle-Walka</name>
+      <email>dirk.schnelle@jvoicexml.org</email>
+      <roles>
+        <role>Java Developer</role>
+      </roles>
+      <timezone>+1</timezone>
+    </developer>
   </developers>
 
   <licenses>
@@ -261,16 +270,9 @@
 
   <distributionManagement>
     <repository>
-      <uniqueVersion>false</uniqueVersion>
-      <id>speechforge-repository</id>
-      <name>Speechforge Repository</name>
-      <url>scp://www.speechforge.org/home/webadmin/speechforge.org/html/repository</url>
+      <id>ossrh</id>
+      <url>https://oss.sonatype.org/content/repositories/snapshots</url>
     </repository>
-    <site>
-      <id>speechforge-site</id>
-      <url>scp://www.speechforge.org/home/webadmin/speechforge.org/html/projects/mrcp4j</url>
-    </site>
-    <downloadUrl>https://sourceforge.net/project/showfiles.php?group_id=${project.group.id}</downloadUrl>
   </distributionManagement>
 
   <properties>
