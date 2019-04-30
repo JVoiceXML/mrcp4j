@@ -2,13 +2,13 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
   <modelVersion>4.0.0</modelVersion>
-  <groupId>org.mrcp4j</groupId>
+  <groupId>org.jvoicexml</groupId>
   <artifactId>mrcp4j</artifactId>
   <packaging>jar</packaging>
   <name>MRCP4J</name>
   <version>SNAPSHOT</version>
   <description>MRCP4J provides a Java API that encapsulates the MRCPv2 protocol and can be used to implement MRCP clients and/or servers.</description>
-  <url>http://${project.artifactId}.sourceforge.net</url>
+  <url>git@github.com:JVoiceXML/mrcp4j.git</url>
   <inceptionYear>2005</inceptionYear>
 
   <mailingLists>
@@ -76,10 +76,9 @@
   </licenses>
 
   <scm>
-    <connection>scm:svn:https://${project.artifactId}.svn.sourceforge.net/svnroot/${project.artifactId}/${project.artifactId}/trunk</connection>
-    <developerConnection>scm:svn:https://${project.artifactId}.svn.sourceforge.net/svnroot/${project.artifactId}/${project.artifactId}/trunk</developerConnection>
-    <!--tag>HEAD</tag-->
-    <url>http://${project.artifactId}.svn.sourceforge.net/viewvc/${project.artifactId}</url>
+    <connection>scm:git:git@github.com:JVoiceXML/mrcp4j.git</connection>
+    <developerConnection>scm:git:git@github.com:JVoiceXML/mrcp4j.git</developerConnection>
+    <url>https://github.com/JVoiceXML/mrcp4j/blob/master</url>
   </scm>
 
   <organization>
@@ -192,9 +191,9 @@
 
   <dependencies>
 	<dependency>
-    	<groupId>org.apache.mina</groupId>
-    	<artifactId>mina-core</artifactId>
-    	<version>2.1.2</version>
+    	<groupId>directory-network</groupId>
+    	<artifactId>mina</artifactId>
+    	<version>0.7.4</version>
 	</dependency>
     <dependency>
       <groupId>commons-logging</groupId>
@@ -208,11 +207,20 @@
       <version>4.4</version>
       <scope>test</scope>
     </dependency>
+	<dependency>
+    	<groupId>org.apache.logging.log4j</groupId>
+    	<artifactId>log4j-api</artifactId>
+    	<version>2.11.2</version>
+  	</dependency>
+  	<dependency>
+    	<groupId>org.apache.logging.log4j</groupId>
+    	<artifactId>log4j-core</artifactId>
+    	<version>2.11.2</version>
+  	</dependency>
     <dependency>
-      <groupId>log4j</groupId>
-      <artifactId>log4j</artifactId>
-      <version>1.2.14</version>
-      <scope>test</scope>
+    	<groupId>org.apache.logging.log4j</groupId>
+    	<artifactId>log4j-1.2-api</artifactId>
+    	<version>2.11.2</version>
     </dependency>
   </dependencies>
 

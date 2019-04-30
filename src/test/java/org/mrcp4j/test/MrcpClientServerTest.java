@@ -37,9 +37,9 @@ import org.mrcp4j.client.MrcpFactory;
 import org.mrcp4j.client.MrcpProvider;
 import org.mrcp4j.message.MrcpResponse;
 import org.mrcp4j.message.request.MrcpRequest;
+import org.mrcp4j.message.request.MrcpRequestFactory.UnimplementedRequest;
 import org.mrcp4j.message.request.StartInputTimersRequest;
 import org.mrcp4j.message.request.StopRequest;
-import org.mrcp4j.message.request.MrcpRequestFactory.UnimplementedRequest;
 import org.mrcp4j.server.MrcpServerSocket;
 import org.mrcp4j.server.MrcpSession;
 import org.mrcp4j.server.provider.RecogOnlyRequestHandler;
@@ -54,7 +54,7 @@ public class MrcpClientServerTest {
 
     // for some reason the @Before method is not getting called (maybe something to do with maven?)
     // so instead explicitly call the method in each test
-//    @Before
+    @Before
     public void setUp() throws Exception {
 
         MrcpTestUtil.configureLog4j(this);
