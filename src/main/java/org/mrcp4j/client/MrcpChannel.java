@@ -43,8 +43,9 @@ import org.mrcp4j.message.request.MrcpRequestFactory;
 /**
  * Provides all primary functionality required for an MRCPv2 client to interact with an MRCPv2 resource.  Through an instance of this class
  * clients can construct and send MRCP requests, receive responses and be notified of events triggered by the MRCP resource.
- * <p/>
+ * <p>
  * To construct a {@code MrcpChannel} instance use {@link org.mrcp4j.client.MrcpProvider#createChannel(java.lang.String, java.net.InetAddress, int, java.lang.String)}.
+ * </p>
  *
  * @author Niels Godfredsen {@literal <}<a href="mailto:ngodfredsen@users.sourceforge.net">ngodfredsen@users.sourceforge.net</a>{@literal >}
  */

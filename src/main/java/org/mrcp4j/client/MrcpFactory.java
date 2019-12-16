@@ -24,11 +24,12 @@ package org.mrcp4j.client;
 
 /**
  * Provides factory methods for MRCPv2 clients to gain access to {@link org.mrcp4j.client.MrcpProvider} instances.
- * <p/>
+ * <p>
  * Currently having to go through a factory to construct an MrcpProvider may seem like a bit of overkill.  However,
  * this is implemented this way in order to facilitate transitioning in the future to a design in which there may
  * be multiple provider implementations accessible through a single factory method.
- *
+ * </p>
+ * 
  * @author Niels Godfredsen {@literal <}<a href="mailto:ngodfredsen@users.sourceforge.net">ngodfredsen@users.sourceforge.net</a>{@literal >}
  */
 public class MrcpFactory {
