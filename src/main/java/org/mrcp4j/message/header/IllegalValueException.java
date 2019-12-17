@@ -40,7 +40,7 @@ public class IllegalValueException extends MrcpException {
     }
 
     /**
-     * @param message
+     * @param message the error message
      */
     public IllegalValueException(String message) {
         super(message);
@@ -48,8 +48,8 @@ public class IllegalValueException extends MrcpException {
     }
 
     /**
-     * @param message
-     * @param cause
+     * @param message the error message
+     * @param cause the root cause for this exception
      */
     public IllegalValueException(String message, Throwable cause) {
         super(message, cause);
@@ -57,7 +57,7 @@ public class IllegalValueException extends MrcpException {
     }
 
     /**
-     * @param cause
+     * @param cause the root cause for this exception
      */
     public IllegalValueException(Throwable cause) {
         super(cause);

@@ -38,22 +38,22 @@ public class MrcpException extends Exception {
     }
 
     /**
-     * @param message
+     * @param message the error message
      */
     public MrcpException(String message) {
         super(message);
     }
 
     /**
-     * @param message
-     * @param cause
+     * @param message the error message
+     * @param cause the root cause for this exception
      */
     public MrcpException(String message, Throwable cause) {
         super(message, cause);
     }
 
     /**
-     * @param cause
+     * @param cause the root cause for this exception
      */
     public MrcpException(Throwable cause) {
         super(cause);
