@@ -8,7 +8,7 @@ repositories {
 }
 
 dependencies {
-    compile group: 'directory-network', name: 'mina', version: '0.7.4'
+    compile group: 'directory-network', name: 'mina', version: '0.8.0'
     compile group: 'commons-logging', name: 'commons-logging', version: '1.2'
     compile group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.11.2'
     compile group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.11.2'
