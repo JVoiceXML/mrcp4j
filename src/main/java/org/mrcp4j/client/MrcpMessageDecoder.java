@@ -22,17 +22,16 @@
  */
 package org.mrcp4j.client;
 
-import org.mrcp4j.message.MrcpMessage;
-import org.mrcp4j.message.header.IllegalValueException;
-import org.mrcp4j.message.header.MrcpHeader;
-import org.mrcp4j.message.header.MrcpHeaderName;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.text.ParseException;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
+import org.mrcp4j.message.MrcpMessage;
+import org.mrcp4j.message.header.IllegalValueException;
+import org.mrcp4j.message.header.MrcpHeader;
+import org.mrcp4j.message.header.MrcpHeaderName;
 
 /**
  * Decodes messages received in MRCPv2 format into {@link org.mrcp4j.message.MrcpMessage} instances.
@@ -41,7 +40,7 @@ import org.apache.commons.logging.LogFactory;
  */
 public class MrcpMessageDecoder {
 
-    private static Log _log = LogFactory.getLog(MrcpMessageDecoder.class);
+	private static Logger _log = LogManager.getLogger(MrcpMessageDecoder.class);
 
     private MrcpResponseDecoder _responseDecoder = new MrcpResponseDecoder();
     private MrcpEventDecoder _eventDecoder = new MrcpEventDecoder();

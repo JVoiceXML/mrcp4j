@@ -22,6 +22,16 @@
  */
 package org.mrcp4j.server;
 
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.SynchronousQueue;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 import org.mrcp4j.MrcpEventName;
 import org.mrcp4j.MrcpRequestState;
 import org.mrcp4j.message.MrcpEvent;
@@ -32,24 +42,13 @@ import org.mrcp4j.message.header.MrcpHeaderName;
 import org.mrcp4j.message.request.MrcpRequest;
 import org.mrcp4j.util.ObjectWrapper;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.SynchronousQueue;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 /**
  *
  * @author Niels Godfredsen {@literal <}<a href="mailto:ngodfredsen@users.sourceforge.net">ngodfredsen@users.sourceforge.net</a>{@literal >}
  */
 public class MrcpRequestProcessorImpl implements MrcpRequestProcessor {
 
-    private static Log _log = LogFactory.getLog(MrcpRequestProcessorImpl.class);
+	private static Logger _log = LogManager.getLogger(MrcpRequestProcessorImpl.class);
 
     private Map<String, MrcpRequestHandler> _requestHandlers =
         Collections.synchronizedMap(new HashMap<String, MrcpRequestHandler>());
