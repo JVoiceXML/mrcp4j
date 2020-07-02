@@ -27,8 +27,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 import org.mrcp4j.MrcpMethodName;
 import org.mrcp4j.message.MrcpEvent;
 import org.mrcp4j.message.MrcpMessage;
@@ -50,8 +50,7 @@ import org.mrcp4j.message.request.MrcpRequestFactory;
  * @author Niels Godfredsen {@literal <}<a href="mailto:ngodfredsen@users.sourceforge.net">ngodfredsen@users.sourceforge.net</a>{@literal >}
  */
 public class MrcpChannel implements MrcpMessageHandler {
-
-    private static Log _log = LogFactory.getLog(MrcpChannel.class);
+    private static Logger _log = LogManager.getLogger(MrcpChannel.class);
     
     private MrcpResponse _response = new MrcpResponse();
     private Object _responseLock = new Object();

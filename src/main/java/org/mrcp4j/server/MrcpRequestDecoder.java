@@ -22,21 +22,20 @@
  */
 package org.mrcp4j.server;
 
-import org.mrcp4j.message.header.IllegalValueException;
-import org.mrcp4j.message.header.MrcpHeader;
-import org.mrcp4j.message.header.MrcpHeaderName;
-import org.mrcp4j.message.request.MrcpRequest;
-import org.mrcp4j.message.request.MrcpRequestFactory;
-
 import java.text.ParseException;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 import org.apache.mina.common.ByteBuffer;
 import org.apache.mina.protocol.ProtocolDecoder;
 import org.apache.mina.protocol.ProtocolDecoderOutput;
 import org.apache.mina.protocol.ProtocolSession;
 import org.apache.mina.protocol.ProtocolViolationException;
+import org.mrcp4j.message.header.IllegalValueException;
+import org.mrcp4j.message.header.MrcpHeader;
+import org.mrcp4j.message.header.MrcpHeaderName;
+import org.mrcp4j.message.request.MrcpRequest;
+import org.mrcp4j.message.request.MrcpRequestFactory;
 
 /**
  * Decodes request messages received in MRCPv2 format into {@link org.mrcp4j.message.request.MrcpRequest} instances.
@@ -45,7 +44,7 @@ import org.apache.mina.protocol.ProtocolViolationException;
  */
 public class MrcpRequestDecoder implements ProtocolDecoder {
 
-    private static Log _log = LogFactory.getLog(MrcpRequestDecoder.class);
+	private static Logger _log = LogManager.getLogger(MrcpRequestDecoder.class);
 
     private StringBuilder decodeBuf = new StringBuilder();
 

@@ -22,8 +22,8 @@
  */
 package org.mrcp4j.server.mina;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 import org.apache.mina.common.ByteBuffer;
 import org.apache.mina.common.IdleStatus;
 import org.apache.mina.io.IoFilter;
@@ -40,7 +40,7 @@ public class IoTextLoggingFilter implements IoFilter {
      */
     public static final String SESSION_LOG_NAME = "org.mrcp4j.server.SESSION";
 
-    private static Log _log = LogFactory.getLog(SESSION_LOG_NAME);
+    private static Logger _log = LogManager.getLogger(SESSION_LOG_NAME);
 
     /* (non-Javadoc)
      * @see org.apache.mina.io.IoFilter#sessionOpened(org.apache.mina.io.IoFilter.NextFilter,
