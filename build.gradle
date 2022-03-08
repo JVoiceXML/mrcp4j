@@ -1,0 +1,99 @@
+plugins {
+    id 'java-library'
+    id 'maven-publish'
+    id 'signing'
+}
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+}
+
+dependencies {
+    api group: 'directory-network', name: 'mina', version: '0.8.0'
+    api group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.13.3'
+    api group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.13.3'
+    api group: 'org.apache.logging.log4j', name: 'log4j-1.2-api', version: '2.13.3'
+
+    testImplementation group: 'junit', name: 'junit', version: '4.13.1'
+}
+
+jar {
+    manifest {
+        attributes("Implementation-Title": 'MRCPv2 library for Java',
+                   'Implementation-Vendor': 'switch',
+                   'Implementation-Version': version,
+                   'Built-By'       : System.properties['user.name'],
+                   'Build-Timestamp': new java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ").format(new Date()),
+                   'Created-By'     : "Gradle ${gradle.gradleVersion}",
+                   'Build-Jdk'      : "${System.properties['java.version']} (${System.properties['java.vendor']} ${System.properties['java.vm.version']})",
+                   'Build-OS'       : "${System.properties['os.name']} ${System.properties['os.arch']} ${System.properties['os.version']}")
+    }
+    baseName 'org.mrcp4j'
+}
+
+java {
+    withJavadocJar()
+    withSourcesJar()
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            artifactId = tasks.jar.baseName
+            from components.java
+            versionMapping {
+                usage('java-api') {
+                    fromResolutionOf('runtimeClasspath')
+                }
+                usage('java-runtime') {
+                    fromResolutionResult()
+                }
+            }
+            pom {
+                name = 'MRCP4j'
+                description = 'MRCP4J provides a Java API that encapsulates the MRCPv2 protocol and can be used to implement MRCP clients and/or servers.'
+                url = 'https://github.com/JVoiceXML/mrcp4j'
+                licenses {
+                    license {
+                        name = 'GNU Lesser General Public License, Version 2.1'
+                        url = 'https://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt'
+                    }
+                }
+                developers {
+                    developer {
+                        id = 'schnelle'
+                        name = 'Dirk Schnelle-Walka'
+                        email = 'dirk.schnelle@jvoicexml.org'
+                    }
+                }
+                scm {
+                    connection = 'scm:git@github.com:JVoiceXML/mrcp4j.git'
+                    developerConnection = 'scm:git@github.com:JVoiceXML/mrcp4j.git'
+                    url = "https://github.com/JVoiceXML/mrcp4j"
+                }
+            }
+        }
+    }
+    repositories {
+        maven {
+            def releasesRepoUrl = "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
+            def snapshotsRepoUrl = "https://oss.sonatype.org/content/repositories/snapshots/" 
+            url = version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
+            credentials {
+                username = JVOICEXML_OSSRH_USERNAME
+                password = JVOICEXML_OSSRH_PASSWORD
+            }
+        }
+    }
+}
+
+signing {
+    sign publishing.publications.mavenJava
+}
+
+javadoc {
+    if(JavaVersion.current().isJava9Compatible()) {
+        options.addBooleanOption('html5', true)
+    }
+}
