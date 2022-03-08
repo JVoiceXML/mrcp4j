@@ -22,6 +22,17 @@
  */
 package org.mrcp4j.server;
 
+import java.io.IOException;
+import java.util.concurrent.TimeoutException;
+
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
+import org.apache.mina.common.TransportType;
+import org.apache.mina.io.IoAcceptor;
+import org.apache.mina.protocol.ProtocolCodecFactory;
+import org.apache.mina.registry.Service;
+import org.apache.mina.registry.ServiceRegistry;
+import org.apache.mina.registry.SimpleServiceRegistry;
 import org.mrcp4j.MrcpEventName;
 import org.mrcp4j.MrcpRequestState;
 import org.mrcp4j.MrcpResourceType;
@@ -41,26 +52,13 @@ import org.mrcp4j.server.provider.SpeakVerifyRequestHandler;
 import org.mrcp4j.server.provider.SpeechSynthRequestHandler;
 import org.mrcp4j.server.provider.VoiceEnrollmentRequestHandler;
 
-import java.io.IOException;
-import java.util.concurrent.TimeoutException;
-
-import org.apache.mina.common.TransportType;
-import org.apache.mina.io.IoAcceptor;
-import org.apache.mina.protocol.ProtocolCodecFactory;
-import org.apache.mina.registry.Service;
-import org.apache.mina.registry.ServiceRegistry;
-import org.apache.mina.registry.SimpleServiceRegistry;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 /**
  *
  * @author Niels Godfredsen {@literal <}<a href="mailto:ngodfredsen@users.sourceforge.net">ngodfredsen@users.sourceforge.net</a>{@literal >}
  */
 public class MrcpServerSocket {
 
-    private static Log _log = LogFactory.getLog(MrcpServerSocket.class);
+	private static Logger _log = LogManager.getLogger(MrcpServerSocket.class);
 
     private static ProtocolCodecFactory CODEC_FACTORY = new MrcpCodecFactory();
 

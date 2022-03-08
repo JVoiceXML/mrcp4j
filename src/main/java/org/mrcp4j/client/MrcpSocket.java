@@ -22,11 +22,6 @@
  */
 package org.mrcp4j.client;
 
-import org.mrcp4j.message.MrcpMessage;
-import org.mrcp4j.message.header.ChannelIdentifier;
-import org.mrcp4j.message.header.IllegalValueException;
-import org.mrcp4j.message.request.MrcpRequest;
-
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -40,8 +35,12 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
+import org.mrcp4j.message.MrcpMessage;
+import org.mrcp4j.message.header.ChannelIdentifier;
+import org.mrcp4j.message.header.IllegalValueException;
+import org.mrcp4j.message.request.MrcpRequest;
 
 /**
  * Provides an endpoint for communication between the MRCPv2 client and the MRCPv2 server (for internal library use only).
@@ -55,7 +54,7 @@ import org.apache.commons.logging.LogFactory;
  */
 public class MrcpSocket {
 
-    private static Log _log = LogFactory.getLog(MrcpSocket.class);
+	private static Logger _log = LogManager.getLogger(MrcpSocket.class);
 
     private MrcpRequestEncoder _requestEncoder = new MrcpRequestEncoder();
     Map<ChannelIdentifier , MrcpMessageHandler> _handlers = Collections.synchronizedMap(new HashMap<ChannelIdentifier , MrcpMessageHandler>());
