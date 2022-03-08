@@ -32,6 +32,11 @@ jar {
     baseName 'org.mrcp4j'
 }
 
+java {
+    withJavadocJar()
+    withSourcesJar()
+}
+
 publishing {
     publications {
         mavenJava(MavenPublication) {
