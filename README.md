@@ -9,3 +9,41 @@ MRCP clients and/or servers.
 
 - JAVA 8
 - Gradle 7.3.1
+
+## Include from from Maven
+
+Configure maven to use Central from your Project Object Model (POM) file.You may do so by
+adding the following to your pom.xml:
+
+    <repositories>
+      <repository>
+        <id>central</id>
+        <name>Maven Central</name>
+        <layout>default</layout>
+        <url>https://repo1.maven.org/maven2</url>
+        <snapshots>
+            <enabled>false</enabled>
+        </snapshots>
+      </repository>
+    </repositories>
+
+Add mrcp4j as a dependecy to your pom.xml
+
+    <dependency>
+      <groupId>org.jvoicexml</groupId>
+      <artifactId>org.mrcp4j</artifactId>
+      <version>0.3</version>
+      <type>module</type>
+    </dependency>
+    
+## Include from Gradle
+
+Add the Maven Central repository to your build.gradle
+
+    repositories {
+      mavenCentral()
+    }
+
+Add mrcp4j as a an implementation dependency to your build.gradle
+
+    implementation 'org.jvoicexml:org.mrcp4j:0.3'
