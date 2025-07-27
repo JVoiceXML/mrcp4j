@@ -29,11 +29,11 @@ import org.mrcp4j.message.MrcpResponse;
 import org.mrcp4j.message.MrcpServerMessage;
 import org.mrcp4j.message.header.MrcpHeader;
 
-import org.apache.mina.common.ByteBuffer;
-import org.apache.mina.protocol.ProtocolEncoder;
-import org.apache.mina.protocol.ProtocolEncoderOutput;
-import org.apache.mina.protocol.ProtocolSession;
-import org.apache.mina.protocol.ProtocolViolationException;
+import org.apache.mina.core.buffer.IoBuffer;
+import org.apache.mina.core.session.IoSession;
+import org.apache.mina.filter.codec.ProtocolEncoder;
+import org.apache.mina.filter.codec.ProtocolEncoderOutput;
+import org.apache.mina.filter.codec.ProtocolEncoderException;
 
 
 /**
@@ -45,8 +45,8 @@ public class MrcpMessageEncoder implements ProtocolEncoder {
 
     private StringBuilder _encodeBuf = new StringBuilder();
 
-    public void encode(ProtocolSession session, Object message, ProtocolEncoderOutput out)
-      throws ProtocolViolationException {
+    public void encode(IoSession session, Object message, ProtocolEncoderOutput out)
+      throws Exception {
 
         // clear encode buffer
         _encodeBuf.delete(0, _encodeBuf.length());
@@ -58,7 +58,7 @@ public class MrcpMessageEncoder implements ProtocolEncoder {
         } else if (message instanceof MrcpEvent) {
             offset = appendEventLine(_encodeBuf, ((MrcpEvent) message));
         } else {
-            throw new ProtocolViolationException("Unsupported message type: " + message.getClass().getName());
+            throw new ProtocolEncoderException("Unsupported message type: " + message.getClass().getName());
         }
 
         // append headers
@@ -88,7 +88,7 @@ public class MrcpMessageEncoder implements ProtocolEncoder {
         bufferLength = _encodeBuf.length();
 
         // write _encodeBuf to out
-        ByteBuffer bytes = ByteBuffer.allocate(bufferLength);
+        IoBuffer bytes = IoBuffer.allocate(bufferLength);
         for (int i = 0; i < bufferLength; i++) {
             bytes.put((byte) _encodeBuf.charAt(i));
         }
@@ -118,5 +118,8 @@ public class MrcpMessageEncoder implements ProtocolEncoder {
         return version.length() + 1;
     }
 
-
+    @Override
+    public void dispose(IoSession session) throws Exception {
+        // No resources to clean up
+    }
 }

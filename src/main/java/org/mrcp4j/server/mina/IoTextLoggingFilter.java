@@ -24,16 +24,17 @@ package org.mrcp4j.server.mina;
 
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
-import org.apache.mina.common.ByteBuffer;
-import org.apache.mina.common.IdleStatus;
-import org.apache.mina.io.IoFilter;
-import org.apache.mina.io.IoSession;
+import org.apache.mina.core.buffer.IoBuffer;
+import org.apache.mina.core.session.IdleStatus;
+import org.apache.mina.core.filterchain.IoFilterAdapter;
+import org.apache.mina.core.session.IoSession;
+import org.apache.mina.core.write.WriteRequest;
 
 /**
  *
  * @author Niels Godfredsen {@literal <}<a href="mailto:ngodfredsen@users.sourceforge.net">ngodfredsen@users.sourceforge.net</a>{@literal >}
  */
-public class IoTextLoggingFilter implements IoFilter {
+public class IoTextLoggingFilter extends IoFilterAdapter {
 
     /**
      * Name of the log used for logging session events.
@@ -46,7 +47,8 @@ public class IoTextLoggingFilter implements IoFilter {
      * @see org.apache.mina.io.IoFilter#sessionOpened(org.apache.mina.io.IoFilter.NextFilter,
      *      org.apache.mina.io.IoSession)
      */
-    public void sessionOpened(NextFilter nextFilter, IoSession session) {
+    @Override
+    public void sessionOpened(NextFilter nextFilter, IoSession session) throws Exception {
         _log.debug("OPENED");
         nextFilter.sessionOpened(session);
     }
@@ -55,7 +57,8 @@ public class IoTextLoggingFilter implements IoFilter {
      * @see org.apache.mina.io.IoFilter#sessionClosed(org.apache.mina.io.IoFilter.NextFilter,
      *      org.apache.mina.io.IoSession)
      */
-    public void sessionClosed(NextFilter nextFilter, IoSession session) {
+    @Override
+    public void sessionClosed(NextFilter nextFilter, IoSession session) throws Exception {
         _log.debug("CLOSED");
         nextFilter.sessionClosed(session);
     }
@@ -64,7 +67,8 @@ public class IoTextLoggingFilter implements IoFilter {
      * @see org.apache.mina.io.IoFilter#sessionIdle(org.apache.mina.io.IoFilter.NextFilter,
      *      org.apache.mina.io.IoSession, org.apache.mina.common.IdleStatus)
      */
-    public void sessionIdle(NextFilter nextFilter, IoSession session, IdleStatus status) {
+    @Override
+    public void sessionIdle(NextFilter nextFilter, IoSession session, IdleStatus status) throws Exception {
         if (_log.isDebugEnabled()) {
             _log.debug("IDLE: " + status);
         }
@@ -75,7 +79,8 @@ public class IoTextLoggingFilter implements IoFilter {
      * @see org.apache.mina.io.IoFilter#exceptionCaught(org.apache.mina.io.IoFilter.NextFilter,
      *      org.apache.mina.io.IoSession, java.lang.Throwable)
      */
-    public void exceptionCaught(NextFilter nextFilter, IoSession session, Throwable cause) {
+    @Override
+    public void exceptionCaught(NextFilter nextFilter, IoSession session, Throwable cause) throws Exception {
         _log.warn("EXCEPTION: " + cause.getMessage() + '\n', cause);
         nextFilter.exceptionCaught(session, cause);
     }
@@ -84,22 +89,24 @@ public class IoTextLoggingFilter implements IoFilter {
      * @see org.apache.mina.io.IoFilter#dataRead(org.apache.mina.io.IoFilter.NextFilter,
      *      org.apache.mina.io.IoSession, org.apache.mina.common.ByteBuffer)
      */
-    public void dataRead(NextFilter nextFilter, IoSession session, ByteBuffer buf) {
+    @Override
+    public void messageReceived(NextFilter nextFilter, IoSession session, Object message) throws Exception {
         if (_log.isDebugEnabled()) {
-            _log.debug("READ:\n" + getAndReset(buf));
+            _log.debug("READ:\n" + message);
         }
-        nextFilter.dataRead(session, buf);
+        nextFilter.messageReceived(session, message);
     }
 
     /* (non-Javadoc)
      * @see org.apache.mina.io.IoFilter#dataWritten(org.apache.mina.io.IoFilter.NextFilter,
      *      org.apache.mina.io.IoSession, java.lang.Object)
      */
-    public void dataWritten(NextFilter nextFilter, IoSession session, Object marker) {
+    @Override
+    public void messageSent(NextFilter nextFilter, IoSession session, WriteRequest writeRequest) throws Exception {
         if (_log.isDebugEnabled()) {
-            _log.debug("WRITTEN:\n" + marker);
+            _log.debug("WRITTEN:\n" + writeRequest.getMessage());
         }
-        nextFilter.dataWritten(session, marker);
+        nextFilter.messageSent(session, writeRequest);
     }
 
     /* (non-Javadoc)
@@ -107,19 +114,11 @@ public class IoTextLoggingFilter implements IoFilter {
      *      org.apache.mina.io.IoSession, org.apache.mina.common.ByteBuffer,
      *      java.lang.Object)
      */
-    public void filterWrite(NextFilter nextFilter, IoSession session, ByteBuffer buf, Object marker) {
+    @Override
+    public void filterWrite(NextFilter nextFilter, IoSession session, WriteRequest writeRequest) throws Exception {
         if (_log.isTraceEnabled()) {
-            _log.trace("WRITE:\n" + marker + "\n[ByteBuffer]:\n" + getAndReset(buf));
+            _log.trace("WRITE:\n" + writeRequest.getMessage());
         }
-        nextFilter.filterWrite(session, buf, marker);
-    }
-
-    private static String getAndReset(ByteBuffer buf) {
-        StringBuilder sb = new StringBuilder();
-        while (buf.hasRemaining()) {
-            sb.append((char) buf.get());
-        }
-        buf.rewind();
-        return sb.toString();
+        nextFilter.filterWrite(session, writeRequest);
     }
 }

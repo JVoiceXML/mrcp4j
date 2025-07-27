@@ -27,14 +27,14 @@ import org.mrcp4j.message.MrcpEvent;
 import org.mrcp4j.message.MrcpResponse;
 import org.mrcp4j.message.request.MrcpRequest;
 
-import org.apache.mina.protocol.ProtocolHandlerAdapter;
-import org.apache.mina.protocol.ProtocolSession;
+import org.apache.mina.core.service.IoHandlerAdapter;
+import org.apache.mina.core.session.IoSession;
 
 /**
  *
  * @author Niels Godfredsen {@literal <}<a href="mailto:ngodfredsen@users.sourceforge.net">ngodfredsen@users.sourceforge.net</a>{@literal >}
  */
-public class MrcpProtocolHandler extends ProtocolHandlerAdapter {
+public class MrcpProtocolHandler extends IoHandlerAdapter {
 
     private MrcpRequestProcessor _requestProcessor;
 
@@ -46,16 +46,16 @@ public class MrcpProtocolHandler extends ProtocolHandlerAdapter {
      * @see org.apache.mina.protocol.ProtocolHandler#exceptionCaught(org.apache.mina.protocol.ProtocolSession, java.lang.Throwable)
      */
     @Override
-    public void exceptionCaught(ProtocolSession session, Throwable cause) {
+    public void exceptionCaught(IoSession session, Throwable cause) {
         // close connection when unexpected exception is caught.
-        session.close();
+        session.closeNow();
     }
 
     /* (non-Javadoc)
      * @see org.apache.mina.protocol.ProtocolHandler#messageReceived(org.apache.mina.protocol.ProtocolSession, java.lang.Object)
      */
     @Override
-    public void messageReceived(ProtocolSession session, Object message) {
+    public void messageReceived(IoSession session, Object message) {
         MrcpRequest request = (MrcpRequest) message;
         new EventThread(_requestProcessor, session, request).start(); // TODO: move threading down chain
     }
@@ -63,10 +63,10 @@ public class MrcpProtocolHandler extends ProtocolHandlerAdapter {
     private static class EventThread extends Thread {
 
         private MrcpRequestProcessor _requestProcessor;
-        private ProtocolSession _session;
+        private IoSession _session;
         private MrcpRequest _request;
 
-        EventThread(MrcpRequestProcessor requestProcessor, ProtocolSession session, MrcpRequest request) {
+        EventThread(MrcpRequestProcessor requestProcessor, IoSession session, MrcpRequest request) {
             _request = request;
             _requestProcessor = requestProcessor;
             _session = session;
@@ -82,7 +82,7 @@ public class MrcpProtocolHandler extends ProtocolHandlerAdapter {
 
             MrcpRequestState requestState = response.getRequestState();
 
-            while (!requestState.equals(MrcpRequestState.COMPLETE) && _session.isConnected()) {
+            while (!requestState.equals(MrcpRequestState.COMPLETE) && !_session.isClosing()) {
                 MrcpEvent event = _requestProcessor.getNextEvent(_request);
                 if (event != null) {
                     _session.write(event);

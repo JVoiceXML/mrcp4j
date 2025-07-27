@@ -10,7 +10,7 @@ repositories {
 }
 
 dependencies {
-    api group: 'directory-network', name: 'mina', version: '0.8.0'
+    api group: 'org.apache.mina', name: 'mina-core', version: '2.2.3'
     api group: 'org.apache.logging.log4j', name: 'log4j-api', version: '2.17.2'
     api group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.17.2'
     api group: 'org.apache.logging.log4j', name: 'log4j-1.2-api', version: '2.17.2'
@@ -29,7 +29,7 @@ jar {
                    'Build-Jdk'      : "${System.properties['java.version']} (${System.properties['java.vendor']} ${System.properties['java.vm.version']})",
                    'Build-OS'       : "${System.properties['os.name']} ${System.properties['os.arch']} ${System.properties['os.version']}")
     }
-    baseName 'org.mrcp4j'
+    archiveBaseName = 'org.mrcp4j'
 }
 
 java {
@@ -40,7 +40,7 @@ java {
 publishing {
     publications {
         mavenJava(MavenPublication) {
-            artifactId = tasks.jar.baseName
+            artifactId = tasks.jar.archiveBaseName.get()
             from components.java
             versionMapping {
                 usage('java-api') {
