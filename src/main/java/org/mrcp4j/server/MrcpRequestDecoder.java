@@ -26,11 +26,11 @@ import java.text.ParseException;
 
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
-import org.apache.mina.common.ByteBuffer;
-import org.apache.mina.protocol.ProtocolDecoder;
-import org.apache.mina.protocol.ProtocolDecoderOutput;
-import org.apache.mina.protocol.ProtocolSession;
-import org.apache.mina.protocol.ProtocolViolationException;
+import org.apache.mina.core.buffer.IoBuffer;
+import org.apache.mina.core.session.IoSession;
+import org.apache.mina.filter.codec.ProtocolDecoder;
+import org.apache.mina.filter.codec.ProtocolDecoderOutput;
+import org.apache.mina.filter.codec.ProtocolDecoderException;
 import org.mrcp4j.message.header.IllegalValueException;
 import org.mrcp4j.message.header.MrcpHeader;
 import org.mrcp4j.message.header.MrcpHeaderName;
@@ -48,8 +48,8 @@ public class MrcpRequestDecoder implements ProtocolDecoder {
 
     private StringBuilder decodeBuf = new StringBuilder();
 
-    public void decode(ProtocolSession session, ByteBuffer in, ProtocolDecoderOutput out)
-      throws ProtocolViolationException {
+    public void decode(IoSession session, IoBuffer in, ProtocolDecoderOutput out)
+      throws Exception {
         try {
 
             // create request from request-line
@@ -76,7 +76,7 @@ public class MrcpRequestDecoder implements ProtocolDecoder {
             try {
                 contentLength = (contentLengthHeader == null) ? 0 : ((Integer) contentLengthHeader.getValueObject()).intValue();
             } catch (IllegalValueException e) {
-                throw new ProtocolViolationException(e.getMessage(), e);
+                throw new ProtocolDecoderException(e.getMessage(), e);
             }
             if (contentLength > 0) {
                 StringBuilder sb = new StringBuilder();
@@ -93,14 +93,14 @@ public class MrcpRequestDecoder implements ProtocolDecoder {
         } catch (ParseException e) {
             //TODO: return 408 response to client?
             _log.debug(e, e);
-            throw (ProtocolViolationException) new ProtocolViolationException(e.getMessage()).initCause(e);
+            throw new ProtocolDecoderException(e.getMessage(), e);
         } catch (RuntimeException e) {
             _log.debug(e, e);
             throw e;
         }
     }
 
-    private String readLine(ByteBuffer in) {
+    private String readLine(IoBuffer in) {
         if (!in.hasRemaining()) {
             return null;
         }
@@ -176,5 +176,13 @@ public class MrcpRequestDecoder implements ProtocolDecoder {
         return request;
     }
 
+    @Override
+    public void finishDecode(IoSession session, ProtocolDecoderOutput out) throws Exception {
+        // No buffering in this codec
+    }
 
+    @Override
+    public void dispose(IoSession session) throws Exception {
+        // No resources to clean up
+    }
 }

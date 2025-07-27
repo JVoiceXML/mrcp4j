@@ -22,9 +22,10 @@
  */
 package org.mrcp4j.server;
 
-import org.apache.mina.protocol.ProtocolCodecFactory;
-import org.apache.mina.protocol.ProtocolDecoder;
-import org.apache.mina.protocol.ProtocolEncoder;
+import org.apache.mina.core.session.IoSession;
+import org.apache.mina.filter.codec.ProtocolCodecFactory;
+import org.apache.mina.filter.codec.ProtocolDecoder;
+import org.apache.mina.filter.codec.ProtocolEncoder;
 
 /**
  *
@@ -32,11 +33,11 @@ import org.apache.mina.protocol.ProtocolEncoder;
  */
 public class MrcpCodecFactory implements ProtocolCodecFactory {
 
-    public ProtocolDecoder newDecoder() {
+    public ProtocolDecoder getDecoder(IoSession session) {
         return new MrcpRequestDecoder();
     }
 
-    public ProtocolEncoder newEncoder() {
+    public ProtocolEncoder getEncoder(IoSession session) {
         return new MrcpMessageEncoder();
     }
 
