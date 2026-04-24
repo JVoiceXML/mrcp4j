@@ -22,15 +22,10 @@
  */
 package org.mrcp4j.server;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.text.ParseException;
 
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
-import org.apache.mina.core.buffer.IoBuffer;
-import org.apache.mina.core.session.IoSession;
-import org.apache.mina.filter.codec.ProtocolDecoder;
-import org.apache.mina.filter.codec.ProtocolDecoderOutput;
-import org.apache.mina.filter.codec.ProtocolDecoderException;
 import org.mrcp4j.message.header.IllegalValueException;
 import org.mrcp4j.message.header.MrcpHeader;
 import org.mrcp4j.message.header.MrcpHeaderName;
@@ -42,85 +37,72 @@ import org.mrcp4j.message.request.MrcpRequestFactory;
  *
  * @author Niels Godfredsen {@literal <}<a href="mailto:ngodfredsen@users.sourceforge.net">ngodfredsen@users.sourceforge.net</a>{@literal >}
  */
-public class MrcpRequestDecoder implements ProtocolDecoder {
-
-	private static Logger _log = LogManager.getLogger(MrcpRequestDecoder.class);
+public class MrcpRequestDecoder {
 
     private StringBuilder decodeBuf = new StringBuilder();
 
-    public void decode(IoSession session, IoBuffer in, ProtocolDecoderOutput out)
-      throws Exception {
-        try {
-
-            // create request from request-line
-            MrcpRequest request = createRequest(readLine(in));
-            
-            // read message-header
-            String line = null;
-            while ( (line = readLine(in)) != null && !(line = line.trim()).equals("") ) {
-                // TODO: handle multi-line headers
-                int index = line.indexOf(':');
-                if (index < 1) {
-                    throw new ParseException("Incorrect message-header format!", -1);
-                }
-                String name = line.substring(0, index);
-                String value = line.substring(index + 1).trim();
-                MrcpHeader header = MrcpHeaderName.createHeader(name, value);
-
-                request.addHeader(header);
-            }
-
-            // read request message body if present
-            MrcpHeader contentLengthHeader = request.getHeader(MrcpHeaderName.CONTENT_LENGTH);
-            int contentLength = 0;
-            try {
-                contentLength = (contentLengthHeader == null) ? 0 : ((Integer) contentLengthHeader.getValueObject()).intValue();
-            } catch (IllegalValueException e) {
-                throw new ProtocolDecoderException(e.getMessage(), e);
-            }
-            if (contentLength > 0) {
-                StringBuilder sb = new StringBuilder();
-                for (int i = 0; i < contentLength; i++) {
-                    byte b = in.get();
-                    sb.append((char) b);
-                } // TODO: handle exceptions
-                request.setContent(sb.toString());
-            }
-
-            // write request object to out
-            out.write(request);
-
-        } catch (ParseException e) {
-            //TODO: return 408 response to client?
-            _log.debug(e, e);
-            throw new ProtocolDecoderException(e.getMessage(), e);
-        } catch (RuntimeException e) {
-            _log.debug(e, e);
-            throw e;
-        }
-    }
-
-    private String readLine(IoBuffer in) {
-        if (!in.hasRemaining()) {
+    public MrcpRequest decode(InputStream in) throws IOException, ParseException, IllegalValueException {
+        // create request from request-line
+        String requestLine = readLine(in);
+        if (requestLine == null) {
             return null;
         }
+        MrcpRequest request = createRequest(requestLine);
 
+        // read message-header
+        String line;
+        while ((line = readLine(in)) != null && !(line = line.trim()).equals("")) {
+            // TODO: handle multi-line headers
+            int index = line.indexOf(':');
+            if (index < 1) {
+                throw new ParseException("Incorrect message-header format!", -1);
+            }
+            String name = line.substring(0, index);
+            String value = line.substring(index + 1).trim();
+            MrcpHeader header = MrcpHeaderName.createHeader(name, value);
+            request.addHeader(header);
+        }
+
+        // read request message body if present
+        MrcpHeader contentLengthHeader = request.getHeader(MrcpHeaderName.CONTENT_LENGTH);
+        int contentLength = 0;
+        if (contentLengthHeader != null) {
+            contentLength = ((Integer) contentLengthHeader.getValueObject()).intValue();
+        }
+        if (contentLength > 0) {
+            if (contentLength > 1024 * 1024) { // 1 MB limit
+                throw new IOException("Content length exceeds maximum allowed size: " + contentLength);
+            }
+            byte[] body = new byte[contentLength];
+            int read = 0;
+            while (read < contentLength) {
+                int n = in.read(body, read, contentLength - read);
+                if (n < 0) {
+                    throw new IOException("Unexpected end of stream while reading message body");
+                }
+                read += n;
+            }
+            request.setContent(new String(body, 0, contentLength, java.nio.charset.StandardCharsets.UTF_8));
+        }
+
+        return request;
+    }
+
+    private String readLine(InputStream in) throws IOException {
         decodeBuf.delete(0, decodeBuf.length());
-        boolean done = false;
-        do {
-            byte b = in.get();
-            switch(b) {
+        int b;
+        while ((b = in.read()) >= 0) {
+            switch (b) {
             case '\r':
                 break;
             case '\n':
-                done = true;
-                break;
+                return decodeBuf.toString();
             default:
                 decodeBuf.append((char) b);
             }
-        } while (!done && in.hasRemaining());
-
-        return decodeBuf.toString();
+        }
+        // end of stream
+        return decodeBuf.length() > 0 ? decodeBuf.toString() : null;
     }
 
     private static final int REQUEST_LINE_MRCP_VERSION_PART   = 0;
@@ -145,7 +127,7 @@ public class MrcpRequestDecoder implements ProtocolDecoder {
         // construct request from method-name
         try {
             request = MrcpRequestFactory.createRequest(requestLineParts[REQUEST_LINE_METHOD_NAME_PART]);
-        } catch (IllegalArgumentException e){
+        } catch (IllegalArgumentException e) {
             String message = "Incorrect method-name format!";
             throw (ParseException) new ParseException(message, -1).initCause(e);
         }
@@ -158,7 +140,7 @@ public class MrcpRequestDecoder implements ProtocolDecoder {
             request.setMessageLength(
                 Integer.parseInt(requestLineParts[REQUEST_LINE_MESSAGE_LENGTH_PART])
             );
-        } catch (NumberFormatException e){
+        } catch (NumberFormatException e) {
             String message = "Incorrect message-length format!";
             throw (ParseException) new ParseException(message, -1).initCause(e);
         }
@@ -168,21 +150,11 @@ public class MrcpRequestDecoder implements ProtocolDecoder {
             request.setRequestID(
                 Long.parseLong(requestLineParts[REQUEST_LINE_REQUEST_ID_PART])
             );
-        } catch (NumberFormatException e){
+        } catch (NumberFormatException e) {
             String message = "Incorrect request-id format!";
             throw (ParseException) new ParseException(message, -1).initCause(e);
         }
 
         return request;
-    }
-
-    @Override
-    public void finishDecode(IoSession session, ProtocolDecoderOutput out) throws Exception {
-        // No buffering in this codec
-    }
-
-    @Override
-    public void dispose(IoSession session) throws Exception {
-        // No resources to clean up
     }
 }

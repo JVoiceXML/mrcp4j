@@ -24,16 +24,14 @@ package org.mrcp4j.server;
 
 import static org.mrcp4j.message.MrcpMessage.CRLF;
 
+import java.io.IOException;
+import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
+
 import org.mrcp4j.message.MrcpEvent;
 import org.mrcp4j.message.MrcpResponse;
 import org.mrcp4j.message.MrcpServerMessage;
 import org.mrcp4j.message.header.MrcpHeader;
-
-import org.apache.mina.core.buffer.IoBuffer;
-import org.apache.mina.core.session.IoSession;
-import org.apache.mina.filter.codec.ProtocolEncoder;
-import org.apache.mina.filter.codec.ProtocolEncoderOutput;
-import org.apache.mina.filter.codec.ProtocolEncoderException;
 
 
 /**
@@ -41,12 +39,11 @@ import org.apache.mina.filter.codec.ProtocolEncoderException;
  *
  * @author Niels Godfredsen {@literal <}<a href="mailto:ngodfredsen@users.sourceforge.net">ngodfredsen@users.sourceforge.net</a>{@literal >}
  */
-public class MrcpMessageEncoder implements ProtocolEncoder {
+public class MrcpMessageEncoder {
 
     private StringBuilder _encodeBuf = new StringBuilder();
 
-    public void encode(IoSession session, Object message, ProtocolEncoderOutput out)
-      throws Exception {
+    public void encode(Object message, OutputStream out) throws IOException {
 
         // clear encode buffer
         _encodeBuf.delete(0, _encodeBuf.length());
@@ -58,7 +55,7 @@ public class MrcpMessageEncoder implements ProtocolEncoder {
         } else if (message instanceof MrcpEvent) {
             offset = appendEventLine(_encodeBuf, ((MrcpEvent) message));
         } else {
-            throw new ProtocolEncoderException("Unsupported message type: " + message.getClass().getName());
+            throw new IOException("Unsupported message type: " + message.getClass().getName());
         }
 
         // append headers
@@ -75,25 +72,35 @@ public class MrcpMessageEncoder implements ProtocolEncoder {
             _encodeBuf.append(serverMessage.getContent());
         }
 
-        // determine and set message length
-        int bufferLength = _encodeBuf.length();
-        int bufferLengthLength = Integer.toString(bufferLength).length();
-        int messageLength = bufferLength + bufferLengthLength;
-        String messageLengthString = Integer.toString(messageLength);
-        if (messageLengthString.length() > bufferLengthLength) {
-            messageLengthString = Integer.toString(++messageLength);
-        }
-        _encodeBuf.insert(offset, messageLengthString);
-        serverMessage.setMessageLength(messageLength);
-        bufferLength = _encodeBuf.length();
+        // encode to bytes to get accurate byte count (important for non-ASCII content bodies)
+        // the placeholder space at 'offset' acts as the separator that follows the length field
+        byte[] withoutLength = _encodeBuf.toString().getBytes(StandardCharsets.UTF_8);
 
-        // write _encodeBuf to out
-        IoBuffer bytes = IoBuffer.allocate(bufferLength);
-        for (int i = 0; i < bufferLength; i++) {
-            bytes.put((byte) _encodeBuf.charAt(i));
+        // compute message-length: byte count of the full message after inserting the length string
+        // at position 'offset' (the placeholder space is kept and follows the length digits)
+        // solve: messageLength = withoutLength.length + len(Integer.toString(messageLength))
+        int base = withoutLength.length;
+        int d = Integer.toString(base).length();
+        int messageLength = base + d;
+        if (Integer.toString(messageLength).length() > d) {
+            messageLength = base + d + 1;
         }
-        bytes.flip();
-        out.write(bytes);
+        String messageLengthString = Integer.toString(messageLength);
+
+        // assemble final byte array: bytes[0..offset) + lengthString + bytes[offset..end)
+        // (the placeholder space at 'offset' is preserved as the separator after the length)
+        byte[] lengthBytes = messageLengthString.getBytes(StandardCharsets.US_ASCII);
+        byte[] result = new byte[messageLength];
+        System.arraycopy(withoutLength, 0, result, 0, offset);
+        System.arraycopy(lengthBytes, 0, result, offset, lengthBytes.length);
+        System.arraycopy(withoutLength, offset, result, offset + lengthBytes.length,
+                withoutLength.length - offset);
+
+        serverMessage.setMessageLength(messageLength);
+
+        // write result to out
+        out.write(result);
+        out.flush();
     }
 
     private static int appendEventLine(StringBuilder encodeBuf, MrcpEvent event) {
@@ -116,10 +123,5 @@ public class MrcpMessageEncoder implements ProtocolEncoder {
         encodeBuf.append(' ').append(response.getRequestState());
         encodeBuf.append(CRLF);
         return version.length() + 1;
-    }
-
-    @Override
-    public void dispose(IoSession session) throws Exception {
-        // No resources to clean up
     }
 }
