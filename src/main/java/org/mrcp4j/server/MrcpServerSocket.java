@@ -27,6 +27,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.TimeoutException;
 
 import org.apache.log4j.LogManager;
@@ -73,6 +74,7 @@ public class MrcpServerSocket {
         _requestProcessorImpl = new MrcpRequestProcessorImpl();
         _serverSocket = new ServerSocket(port);
         _executor = Executors.newCachedThreadPool();
+        // TODO: consider a bounded thread pool with a max connection limit to prevent resource exhaustion under load
 
         _executor.submit(new AcceptThread());
 
@@ -164,7 +166,17 @@ public class MrcpServerSocket {
                     if (_log.isDebugEnabled()) {
                         _log.debug("Accepted connection from " + socket.getRemoteSocketAddress());
                     }
-                    _executor.submit(new MrcpProtocolHandler(_requestProcessorImpl, socket));
+                    try {
+                        _executor.submit(new MrcpProtocolHandler(_requestProcessorImpl, socket));
+                    } catch (RejectedExecutionException e) {
+                        // executor is shutting down; close the accepted socket to avoid a leak
+                        try {
+                            socket.close();
+                        } catch (IOException ce) {
+                            _log.debug("Error closing socket after rejection", ce);
+                        }
+                        break;
+                    }
                 } catch (IOException e) {
                     if (!_disposed) {
                         _log.warn("Error accepting connection: " + e.getMessage(), e);

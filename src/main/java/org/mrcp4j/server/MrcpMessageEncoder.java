@@ -26,6 +26,7 @@ import static org.mrcp4j.message.MrcpMessage.CRLF;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 
 import org.mrcp4j.message.MrcpEvent;
 import org.mrcp4j.message.MrcpResponse;
@@ -71,20 +72,34 @@ public class MrcpMessageEncoder {
             _encodeBuf.append(serverMessage.getContent());
         }
 
-        // determine and set message length
-        int bufferLength = _encodeBuf.length();
-        int bufferLengthLength = Integer.toString(bufferLength).length();
-        int messageLength = bufferLength + bufferLengthLength;
-        String messageLengthString = Integer.toString(messageLength);
-        if (messageLengthString.length() > bufferLengthLength) {
-            messageLengthString = Integer.toString(++messageLength);
-        }
-        _encodeBuf.insert(offset, messageLengthString);
-        serverMessage.setMessageLength(messageLength);
-        bufferLength = _encodeBuf.length();
+        // encode to bytes to get accurate byte count (important for non-ASCII content bodies)
+        // the placeholder space at 'offset' acts as the separator that follows the length field
+        byte[] withoutLength = _encodeBuf.toString().getBytes(StandardCharsets.UTF_8);
 
-        // write _encodeBuf to out
-        out.write(_encodeBuf.toString().getBytes(java.nio.charset.StandardCharsets.UTF_8));
+        // compute message-length: byte count of the full message after inserting the length string
+        // at position 'offset' (the placeholder space is kept and follows the length digits)
+        // solve: messageLength = withoutLength.length + len(Integer.toString(messageLength))
+        int base = withoutLength.length;
+        int d = Integer.toString(base).length();
+        int messageLength = base + d;
+        if (Integer.toString(messageLength).length() > d) {
+            messageLength = base + d + 1;
+        }
+        String messageLengthString = Integer.toString(messageLength);
+
+        // assemble final byte array: bytes[0..offset) + lengthString + bytes[offset..end)
+        // (the placeholder space at 'offset' is preserved as the separator after the length)
+        byte[] lengthBytes = messageLengthString.getBytes(StandardCharsets.US_ASCII);
+        byte[] result = new byte[messageLength];
+        System.arraycopy(withoutLength, 0, result, 0, offset);
+        System.arraycopy(lengthBytes, 0, result, offset, lengthBytes.length);
+        System.arraycopy(withoutLength, offset, result, offset + lengthBytes.length,
+                withoutLength.length - offset);
+
+        serverMessage.setMessageLength(messageLength);
+
+        // write result to out
+        out.write(result);
         out.flush();
     }
 

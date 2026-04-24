@@ -22,6 +22,8 @@
  */
 package org.mrcp4j.server;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -56,8 +58,8 @@ public class MrcpProtocolHandler implements Runnable {
     public void run() {
         _log.debug("OPENED");
         try {
-            InputStream in = _socket.getInputStream();
-            OutputStream out = _socket.getOutputStream();
+            InputStream in = new BufferedInputStream(_socket.getInputStream());
+            OutputStream out = new BufferedOutputStream(_socket.getOutputStream());
             MrcpRequestDecoder decoder = new MrcpRequestDecoder();
             MrcpMessageEncoder encoder = new MrcpMessageEncoder();
 

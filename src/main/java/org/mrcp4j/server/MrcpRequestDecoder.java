@@ -26,8 +26,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.text.ParseException;
 
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
 import org.mrcp4j.message.header.IllegalValueException;
 import org.mrcp4j.message.header.MrcpHeader;
 import org.mrcp4j.message.header.MrcpHeaderName;
@@ -40,8 +38,6 @@ import org.mrcp4j.message.request.MrcpRequestFactory;
  * @author Niels Godfredsen {@literal <}<a href="mailto:ngodfredsen@users.sourceforge.net">ngodfredsen@users.sourceforge.net</a>{@literal >}
  */
 public class MrcpRequestDecoder {
-
-    private static Logger _log = LogManager.getLogger(MrcpRequestDecoder.class);
 
     private StringBuilder decodeBuf = new StringBuilder();
 
