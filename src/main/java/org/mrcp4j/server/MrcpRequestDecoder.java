@@ -47,7 +47,11 @@ public class MrcpRequestDecoder {
 
     public MrcpRequest decode(InputStream in) throws IOException, ParseException, IllegalValueException {
         // create request from request-line
-        MrcpRequest request = createRequest(readLine(in));
+        String requestLine = readLine(in);
+        if (requestLine == null) {
+            return null;
+        }
+        MrcpRequest request = createRequest(requestLine);
 
         // read message-header
         String line;
