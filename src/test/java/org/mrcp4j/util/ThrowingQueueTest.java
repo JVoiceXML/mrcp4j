@@ -22,7 +22,7 @@
  */
 package org.mrcp4j.util;
 
-import static org.junit.Assert.*;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -43,7 +43,7 @@ public class ThrowingQueueTest {
         String testElement = "test element";
         queue.put(testElement);
         String result = queue.take();
-        assertEquals("Should return same element", testElement, result);
+        Assert.assertEquals("Should return same element", testElement, result);
     }
 
     @Test
@@ -56,16 +56,16 @@ public class ThrowingQueueTest {
         queue.put(element2);
         queue.put(element3);
         
-        assertEquals("Should return first element", element1, queue.take());
-        assertEquals("Should return second element", element2, queue.take());
-        assertEquals("Should return third element", element3, queue.take());
+        Assert.assertEquals("Should return first element", element1, queue.take());
+        Assert.assertEquals("Should return second element", element2, queue.take());
+        Assert.assertEquals("Should return third element", element3, queue.take());
     }
 
     @Test
     public void testPutAndTakeNullElement() throws InterruptedException, RuntimeException {
         queue.put((String) null);
         String result = queue.take();
-        assertNull("Should return null", result);
+        Assert.assertNull("Should return null", result);
     }
 
     @Test
@@ -75,10 +75,10 @@ public class ThrowingQueueTest {
         
         try {
             queue.take();
-            fail("Should have thrown the exception");
+            Assert.fail("Should have thrown the exception");
         } catch (RuntimeException e) {
-            assertEquals("Should be the same exception", testException, e);
-            assertEquals("Should have same message", "Test exception", e.getMessage());
+            Assert.assertEquals("Should be the same exception", testException, e);
+            Assert.assertEquals("Should have same message", "Test exception", e.getMessage());
         }
     }
 
@@ -92,16 +92,16 @@ public class ThrowingQueueTest {
         queue.put(exception);
         queue.put(element2);
         
-        assertEquals("Should return first element", element1, queue.take());
+        Assert.assertEquals("Should return first element", element1, queue.take());
         
         try {
             queue.take();
-            fail("Should have thrown the exception");
+            Assert.fail("Should have thrown the exception");
         } catch (RuntimeException e) {
-            assertEquals("Should be the same exception", exception, e);
+            Assert.assertEquals("Should be the same exception", exception, e);
         }
         
-        assertEquals("Should return second element", element2, queue.take());
+        Assert.assertEquals("Should return second element", element2, queue.take());
     }
 
     @Test
@@ -114,16 +114,16 @@ public class ThrowingQueueTest {
         
         try {
             queue.take();
-            fail("Should have thrown first exception");
+            Assert.fail("Should have thrown first exception");
         } catch (RuntimeException e) {
-            assertEquals("Should be the first exception", exception1, e);
+            Assert.assertEquals("Should be the first exception", exception1, e);
         }
         
         try {
             queue.take();
-            fail("Should have thrown second exception");
+            Assert.fail("Should have thrown second exception");
         } catch (RuntimeException e) {
-            assertEquals("Should be the second exception", exception2, e);
+            Assert.assertEquals("Should be the second exception", exception2, e);
         }
     }
 
@@ -138,11 +138,11 @@ public class ThrowingQueueTest {
         exceptionQueue.put(exception);
         
         try {
-            assertEquals("Should return element", element, exceptionQueue.take());
+            Assert.assertEquals("Should return element", element, exceptionQueue.take());
             exceptionQueue.take();
-            fail("Should have thrown exception");
+            Assert.fail("Should have thrown exception");
         } catch (Exception e) {
-            assertEquals("Should be the same exception", exception, e);
+            Assert.assertEquals("Should be the same exception", exception, e);
         }
     }
 
@@ -153,7 +153,7 @@ public class ThrowingQueueTest {
         Integer testValue = 42;
         intQueue.put(testValue);
         Integer result = intQueue.take();
-        assertEquals("Should return same integer", testValue, result);
+        Assert.assertEquals("Should return same integer", testValue, result);
     }
 
     @Test
@@ -165,7 +165,7 @@ public class ThrowingQueueTest {
         
         for (int i = 0; i < 10; i++) {
             String result = queue.take();
-            assertEquals("Should maintain FIFO order", "element" + i, result);
+            Assert.assertEquals("Should maintain FIFO order", "element" + i, result);
         }
     }
 
@@ -192,8 +192,8 @@ public class ThrowingQueueTest {
         // This should block until the element is put
         String result = queue.take();
         
-        assertEquals("Should return the element", testElement, result);
-        assertTrue("Put should have been called", putCalled[0]);
+        Assert.assertEquals("Should return the element", testElement, result);
+        Assert.assertTrue("Put should have been called", putCalled[0]);
         
         putThread.join();
     }
@@ -206,11 +206,11 @@ public class ThrowingQueueTest {
             String result = queue.take();
             // If we get here, the null throwable didn't cause an exception
             // This might be valid behavior - null element is returned
-            assertNull("Null throwable should result in null element", result);
+            Assert.assertNull("Null throwable should result in null element", result);
         } catch (Throwable e) {
             // If an exception is thrown, it's also acceptable behavior
             // The exact behavior for null throwable is implementation-dependent
-            assertTrue("Should throw some kind of exception for null throwable", 
+            Assert.assertTrue("Should throw some kind of exception for null throwable", 
                       e instanceof RuntimeException || e instanceof NullPointerException);
         }
     }

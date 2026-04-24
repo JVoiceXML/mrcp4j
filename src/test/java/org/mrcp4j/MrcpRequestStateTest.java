@@ -22,7 +22,7 @@
  */
 package org.mrcp4j;
 
-import static org.junit.Assert.*;
+import org.junit.Assert;
 import org.junit.Test;
 
 /**
@@ -32,26 +32,26 @@ public class MrcpRequestStateTest {
 
     @Test
     public void testToString() {
-        assertEquals("PENDING", MrcpRequestState.PENDING.toString());
-        assertEquals("IN-PROGRESS", MrcpRequestState.IN_PROGRESS.toString());
-        assertEquals("COMPLETE", MrcpRequestState.COMPLETE.toString());
+        Assert.assertEquals("PENDING", MrcpRequestState.PENDING.toString());
+        Assert.assertEquals("IN-PROGRESS", MrcpRequestState.IN_PROGRESS.toString());
+        Assert.assertEquals("COMPLETE", MrcpRequestState.COMPLETE.toString());
     }
 
     @Test
     public void testFromStringValid() {
-        assertEquals(MrcpRequestState.PENDING, MrcpRequestState.fromString("PENDING"));
-        assertEquals(MrcpRequestState.IN_PROGRESS, MrcpRequestState.fromString("IN-PROGRESS"));
-        assertEquals(MrcpRequestState.COMPLETE, MrcpRequestState.fromString("COMPLETE"));
+        Assert.assertEquals(MrcpRequestState.PENDING, MrcpRequestState.fromString("PENDING"));
+        Assert.assertEquals(MrcpRequestState.IN_PROGRESS, MrcpRequestState.fromString("IN-PROGRESS"));
+        Assert.assertEquals(MrcpRequestState.COMPLETE, MrcpRequestState.fromString("COMPLETE"));
     }
 
     @Test
     public void testFromStringCaseInsensitive() {
-        assertEquals(MrcpRequestState.PENDING, MrcpRequestState.fromString("pending"));
-        assertEquals(MrcpRequestState.PENDING, MrcpRequestState.fromString("Pending"));
-        assertEquals(MrcpRequestState.IN_PROGRESS, MrcpRequestState.fromString("in-progress"));
-        assertEquals(MrcpRequestState.IN_PROGRESS, MrcpRequestState.fromString("In-Progress"));
-        assertEquals(MrcpRequestState.COMPLETE, MrcpRequestState.fromString("complete"));
-        assertEquals(MrcpRequestState.COMPLETE, MrcpRequestState.fromString("Complete"));
+        Assert.assertEquals(MrcpRequestState.PENDING, MrcpRequestState.fromString("pending"));
+        Assert.assertEquals(MrcpRequestState.PENDING, MrcpRequestState.fromString("Pending"));
+        Assert.assertEquals(MrcpRequestState.IN_PROGRESS, MrcpRequestState.fromString("in-progress"));
+        Assert.assertEquals(MrcpRequestState.IN_PROGRESS, MrcpRequestState.fromString("In-Progress"));
+        Assert.assertEquals(MrcpRequestState.COMPLETE, MrcpRequestState.fromString("complete"));
+        Assert.assertEquals(MrcpRequestState.COMPLETE, MrcpRequestState.fromString("Complete"));
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -77,20 +77,20 @@ public class MrcpRequestStateTest {
     @Test
     public void testEnumValues() {
         MrcpRequestState[] values = MrcpRequestState.values();
-        assertEquals("Should have exactly 3 request states", 3, values.length);
+        Assert.assertEquals("Should have exactly 3 request states", 3, values.length);
         
         // Verify all enum values have non-null toString
         for (MrcpRequestState requestState : values) {
-            assertNotNull("toString should not be null", requestState.toString());
-            assertFalse("toString should not be empty", requestState.toString().isEmpty());
+            Assert.assertNotNull("toString should not be null", requestState.toString());
+            Assert.assertFalse("toString should not be empty", requestState.toString().isEmpty());
         }
     }
 
     @Test
     public void testEnumValueOf() {
-        assertEquals(MrcpRequestState.PENDING, MrcpRequestState.valueOf("PENDING"));
-        assertEquals(MrcpRequestState.IN_PROGRESS, MrcpRequestState.valueOf("IN_PROGRESS"));
-        assertEquals(MrcpRequestState.COMPLETE, MrcpRequestState.valueOf("COMPLETE"));
+        Assert.assertEquals(MrcpRequestState.PENDING, MrcpRequestState.valueOf("PENDING"));
+        Assert.assertEquals(MrcpRequestState.IN_PROGRESS, MrcpRequestState.valueOf("IN_PROGRESS"));
+        Assert.assertEquals(MrcpRequestState.COMPLETE, MrcpRequestState.valueOf("COMPLETE"));
     }
 
     @Test(expected = IllegalArgumentException.class)

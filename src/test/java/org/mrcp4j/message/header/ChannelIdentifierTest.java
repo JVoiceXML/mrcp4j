@@ -22,7 +22,7 @@
  */
 package org.mrcp4j.message.header;
 
-import static org.junit.Assert.*;
+import org.junit.Assert;
 import org.junit.Test;
 import org.mrcp4j.MrcpResourceType;
 
@@ -38,9 +38,9 @@ public class ChannelIdentifierTest {
         
         ChannelIdentifier identifier = new ChannelIdentifier(channelID, resourceType);
         
-        assertEquals("Channel ID should match", channelID, identifier.getChannelID());
-        assertEquals("Resource type should match", resourceType, identifier.getResourceType());
-        assertEquals("String representation should be formatted correctly", 
+        Assert.assertEquals("Channel ID should match", channelID, identifier.getChannelID());
+        Assert.assertEquals("Resource type should match", resourceType, identifier.getResourceType());
+        Assert.assertEquals("String representation should be formatted correctly", 
                     channelID + "@" + resourceType.toString(), identifier.toString());
     }
 
@@ -51,9 +51,9 @@ public class ChannelIdentifierTest {
         for (MrcpResourceType resourceType : MrcpResourceType.values()) {
             ChannelIdentifier identifier = new ChannelIdentifier(channelID, resourceType);
             
-            assertEquals("Channel ID should match", channelID, identifier.getChannelID());
-            assertEquals("Resource type should match", resourceType, identifier.getResourceType());
-            assertEquals("String representation should be formatted correctly", 
+            Assert.assertEquals("Channel ID should match", channelID, identifier.getChannelID());
+            Assert.assertEquals("Resource type should match", resourceType, identifier.getResourceType());
+            Assert.assertEquals("String representation should be formatted correctly", 
                         channelID + "@" + resourceType.toString(), identifier.toString());
         }
     }
@@ -86,9 +86,9 @@ public class ChannelIdentifierTest {
         ChannelIdentifier identifier = new ChannelIdentifier(channelID, resourceType);
         
         // The constructor doesn't trim the channel ID, but the toString() does
-        assertEquals("Channel ID should not be trimmed in getter", "  test  ", identifier.getChannelID());
-        assertEquals("Resource type should match", resourceType, identifier.getResourceType());
-        assertEquals("String should use trimmed channel ID", "test@speechrecog", identifier.toString());
+        Assert.assertEquals("Channel ID should not be trimmed in getter", "  test  ", identifier.getChannelID());
+        Assert.assertEquals("Resource type should match", resourceType, identifier.getResourceType());
+        Assert.assertEquals("String should use trimmed channel ID", "test@speechrecog", identifier.toString());
     }
 
     @Test
@@ -98,12 +98,12 @@ public class ChannelIdentifierTest {
         ChannelIdentifier id3 = new ChannelIdentifier("different", MrcpResourceType.SPEECHRECOG);
         ChannelIdentifier id4 = new ChannelIdentifier("test", MrcpResourceType.SPEECHSYNTH);
         
-        assertTrue("Same channel identifiers should be equal", id1.equals(id2));
-        assertTrue("Should be reflexive", id1.equals(id1));
-        assertFalse("Different channel IDs should not be equal", id1.equals(id3));
-        assertFalse("Different resource types should not be equal", id1.equals(id4));
-        assertFalse("Should not equal null", id1.equals(null));
-        assertFalse("Should not equal different type", id1.equals("string"));
+        Assert.assertTrue("Same channel identifiers should be equal", id1.equals(id2));
+        Assert.assertTrue("Should be reflexive", id1.equals(id1));
+        Assert.assertFalse("Different channel IDs should not be equal", id1.equals(id3));
+        Assert.assertFalse("Different resource types should not be equal", id1.equals(id4));
+        Assert.assertFalse("Should not equal null", id1.equals(null));
+        Assert.assertFalse("Should not equal different type", id1.equals("string"));
     }
 
     @Test
@@ -111,8 +111,8 @@ public class ChannelIdentifierTest {
         ChannelIdentifier id1 = new ChannelIdentifier("test", MrcpResourceType.SPEECHRECOG);
         ChannelIdentifier id2 = new ChannelIdentifier("test", MrcpResourceType.SPEECHRECOG);
         
-        assertTrue("Should be symmetric", id1.equals(id2));
-        assertTrue("Should be symmetric", id2.equals(id1));
+        Assert.assertTrue("Should be symmetric", id1.equals(id2));
+        Assert.assertTrue("Should be symmetric", id2.equals(id1));
     }
 
     @Test
@@ -121,9 +121,9 @@ public class ChannelIdentifierTest {
         ChannelIdentifier id2 = new ChannelIdentifier("test", MrcpResourceType.SPEECHRECOG);
         ChannelIdentifier id3 = new ChannelIdentifier("test", MrcpResourceType.SPEECHRECOG);
         
-        assertTrue("First pair should be equal", id1.equals(id2));
-        assertTrue("Second pair should be equal", id2.equals(id3));
-        assertTrue("Should be transitive", id1.equals(id3));
+        Assert.assertTrue("First pair should be equal", id1.equals(id2));
+        Assert.assertTrue("Second pair should be equal", id2.equals(id3));
+        Assert.assertTrue("Should be transitive", id1.equals(id3));
     }
 
     @Test
@@ -132,22 +132,22 @@ public class ChannelIdentifierTest {
         ChannelIdentifier id2 = new ChannelIdentifier("test", MrcpResourceType.SPEECHRECOG);
         ChannelIdentifier id3 = new ChannelIdentifier("different", MrcpResourceType.SPEECHRECOG);
         
-        assertEquals("Equal objects should have same hash code", id1.hashCode(), id2.hashCode());
+        Assert.assertEquals("Equal objects should have same hash code", id1.hashCode(), id2.hashCode());
         // Note: Different objects may have same hash code, so we can't assert inequality
         
         // Consistency test - hash code should be consistent across calls
         int hashCode1 = id1.hashCode();
         int hashCode2 = id1.hashCode();
-        assertEquals("Hash code should be consistent", hashCode1, hashCode2);
+        Assert.assertEquals("Hash code should be consistent", hashCode1, hashCode2);
     }
 
     @Test
     public void testToString() {
         ChannelIdentifier identifier = new ChannelIdentifier("12345", MrcpResourceType.SPEECHRECOG);
-        assertEquals("ToString should format correctly", "12345@speechrecog", identifier.toString());
+        Assert.assertEquals("ToString should format correctly", "12345@speechrecog", identifier.toString());
         
         identifier = new ChannelIdentifier("abc", MrcpResourceType.SPEECHSYNTH);
-        assertEquals("ToString should format correctly", "abc@speechsynth", identifier.toString());
+        Assert.assertEquals("ToString should format correctly", "abc@speechsynth", identifier.toString());
     }
 
     @Test
@@ -156,10 +156,10 @@ public class ChannelIdentifierTest {
         
         Object result = factory.fromValueString("test@speechrecog");
         
-        assertTrue("Should return ChannelIdentifier", result instanceof ChannelIdentifier);
+        Assert.assertTrue("Should return ChannelIdentifier", result instanceof ChannelIdentifier);
         ChannelIdentifier identifier = (ChannelIdentifier) result;
-        assertEquals("Channel ID should match", "test", identifier.getChannelID());
-        assertEquals("Resource type should match", MrcpResourceType.SPEECHRECOG, identifier.getResourceType());
+        Assert.assertEquals("Channel ID should match", "test", identifier.getChannelID());
+        Assert.assertEquals("Resource type should match", MrcpResourceType.SPEECHRECOG, identifier.getResourceType());
     }
 
     @Test
@@ -168,10 +168,10 @@ public class ChannelIdentifierTest {
         
         Object result = factory.fromValueString("  test  @  speechrecog  ");
         
-        assertTrue("Should return ChannelIdentifier", result instanceof ChannelIdentifier);
+        Assert.assertTrue("Should return ChannelIdentifier", result instanceof ChannelIdentifier);
         ChannelIdentifier identifier = (ChannelIdentifier) result;
-        assertEquals("Channel ID should be trimmed", "test", identifier.getChannelID());
-        assertEquals("Resource type should match", MrcpResourceType.SPEECHRECOG, identifier.getResourceType());
+        Assert.assertEquals("Channel ID should be trimmed", "test", identifier.getChannelID());
+        Assert.assertEquals("Resource type should match", MrcpResourceType.SPEECHRECOG, identifier.getResourceType());
     }
 
     @Test(expected = IllegalValueException.class)
@@ -191,13 +191,13 @@ public class ChannelIdentifierTest {
         ChannelIdentifier.Factory factory = new ChannelIdentifier.Factory();
         try {
             factory.fromValueString("test@invalidresource");
-            fail("Should have thrown IllegalValueException for invalid resource type");
+            Assert.fail("Should have thrown IllegalValueException for invalid resource type");
         } catch (IllegalValueException e) {
             // Expected
-            assertTrue("Should throw IllegalValueException", true);
+            Assert.assertTrue("Should throw IllegalValueException", true);
         } catch (IllegalArgumentException e) {
             // MrcpResourceType.fromString throws IllegalArgumentException, which might get wrapped
-            assertTrue("IllegalArgumentException is also acceptable", true);
+            Assert.assertTrue("IllegalArgumentException is also acceptable", true);
         }
     }
 
@@ -209,13 +209,13 @@ public class ChannelIdentifierTest {
         try {
             Object result = factory.fromValueString("@speechrecog");
             // If it succeeds, that's valid behavior too
-            assertTrue("Should return ChannelIdentifier", result instanceof ChannelIdentifier);
+            Assert.assertTrue("Should return ChannelIdentifier", result instanceof ChannelIdentifier);
             ChannelIdentifier identifier = (ChannelIdentifier) result;
-            assertEquals("Channel ID should be empty", "", identifier.getChannelID());
-            assertEquals("Resource type should match", MrcpResourceType.SPEECHRECOG, identifier.getResourceType());
+            Assert.assertEquals("Channel ID should be empty", "", identifier.getChannelID());
+            Assert.assertEquals("Resource type should match", MrcpResourceType.SPEECHRECOG, identifier.getResourceType());
         } catch (IllegalValueException e) {
             // This is also acceptable - empty channel ID might be rejected
-            assertTrue("Should throw IllegalValueException for empty channel ID", true);
+            Assert.assertTrue("Should throw IllegalValueException for empty channel ID", true);
         }
     }
 
@@ -230,6 +230,6 @@ public class ChannelIdentifierTest {
         ChannelIdentifier.Factory factory = new ChannelIdentifier.Factory();
         // BaseValueFactory constructor sets the target class
         // We can't directly test this as it's protected, but we can verify the factory works
-        assertNotNull("Factory should be created", factory);
+        Assert.assertNotNull("Factory should be created", factory);
     }
 }

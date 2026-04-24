@@ -22,7 +22,7 @@
  */
 package org.mrcp4j;
 
-import static org.junit.Assert.*;
+import org.junit.Assert;
 import org.junit.Test;
 
 /**
@@ -33,23 +33,23 @@ public class MrcpExceptionTest {
     @Test
     public void testDefaultConstructor() {
         MrcpException exception = new MrcpException();
-        assertNull("Message should be null", exception.getMessage());
-        assertNull("Cause should be null", exception.getCause());
+        Assert.assertNull("Message should be null", exception.getMessage());
+        Assert.assertNull("Cause should be null", exception.getCause());
     }
 
     @Test
     public void testMessageConstructor() {
         String message = "Test error message";
         MrcpException exception = new MrcpException(message);
-        assertEquals("Message should match", message, exception.getMessage());
-        assertNull("Cause should be null", exception.getCause());
+        Assert.assertEquals("Message should match", message, exception.getMessage());
+        Assert.assertNull("Cause should be null", exception.getCause());
     }
 
     @Test
     public void testMessageConstructorWithNull() {
         MrcpException exception = new MrcpException((String) null);
-        assertNull("Message should be null", exception.getMessage());
-        assertNull("Cause should be null", exception.getCause());
+        Assert.assertNull("Message should be null", exception.getMessage());
+        Assert.assertNull("Cause should be null", exception.getCause());
     }
 
     @Test
@@ -57,54 +57,54 @@ public class MrcpExceptionTest {
         String message = "Test error message";
         Exception cause = new RuntimeException("Root cause");
         MrcpException exception = new MrcpException(message, cause);
-        assertEquals("Message should match", message, exception.getMessage());
-        assertEquals("Cause should match", cause, exception.getCause());
+        Assert.assertEquals("Message should match", message, exception.getMessage());
+        Assert.assertEquals("Cause should match", cause, exception.getCause());
     }
 
     @Test
     public void testMessageAndCauseConstructorWithNullMessage() {
         Exception cause = new RuntimeException("Root cause");
         MrcpException exception = new MrcpException(null, cause);
-        assertNull("Message should be null", exception.getMessage());
-        assertEquals("Cause should match", cause, exception.getCause());
+        Assert.assertNull("Message should be null", exception.getMessage());
+        Assert.assertEquals("Cause should match", cause, exception.getCause());
     }
 
     @Test
     public void testMessageAndCauseConstructorWithNullCause() {
         String message = "Test error message";
         MrcpException exception = new MrcpException(message, null);
-        assertEquals("Message should match", message, exception.getMessage());
-        assertNull("Cause should be null", exception.getCause());
+        Assert.assertEquals("Message should match", message, exception.getMessage());
+        Assert.assertNull("Cause should be null", exception.getCause());
     }
 
     @Test
     public void testCauseConstructor() {
         Exception cause = new RuntimeException("Root cause");
         MrcpException exception = new MrcpException(cause);
-        assertEquals("Message should be cause's toString", cause.toString(), exception.getMessage());
-        assertEquals("Cause should match", cause, exception.getCause());
+        Assert.assertEquals("Message should be cause's toString", cause.toString(), exception.getMessage());
+        Assert.assertEquals("Cause should match", cause, exception.getCause());
     }
 
     @Test
     public void testCauseConstructorWithNull() {
         MrcpException exception = new MrcpException((Throwable) null);
-        assertNull("Message should be null", exception.getMessage());
-        assertNull("Cause should be null", exception.getCause());
+        Assert.assertNull("Message should be null", exception.getMessage());
+        Assert.assertNull("Cause should be null", exception.getCause());
     }
 
     @Test
     public void testInheritanceFromException() {
         MrcpException exception = new MrcpException("Test message");
-        assertTrue("Should be instance of Exception", exception instanceof Exception);
-        assertTrue("Should be instance of Throwable", exception instanceof Throwable);
+        Assert.assertTrue("Should be instance of Exception", exception instanceof Exception);
+        Assert.assertTrue("Should be instance of Throwable", exception instanceof Throwable);
     }
 
     @Test
     public void testStackTrace() {
         MrcpException exception = new MrcpException("Test message");
         StackTraceElement[] stackTrace = exception.getStackTrace();
-        assertNotNull("Stack trace should not be null", stackTrace);
-        assertTrue("Stack trace should have elements", stackTrace.length > 0);
+        Assert.assertNotNull("Stack trace should not be null", stackTrace);
+        Assert.assertTrue("Stack trace should have elements", stackTrace.length > 0);
     }
 
     @Test
@@ -113,8 +113,8 @@ public class MrcpExceptionTest {
         Exception intermediateCause = new RuntimeException("Intermediate cause", rootCause);
         MrcpException exception = new MrcpException("Top level message", intermediateCause);
         
-        assertEquals("Top level message", exception.getMessage());
-        assertEquals(intermediateCause, exception.getCause());
-        assertEquals(rootCause, exception.getCause().getCause());
+        Assert.assertEquals("Top level message", exception.getMessage());
+        Assert.assertEquals(intermediateCause, exception.getCause());
+        Assert.assertEquals(rootCause, exception.getCause().getCause());
     }
 }
