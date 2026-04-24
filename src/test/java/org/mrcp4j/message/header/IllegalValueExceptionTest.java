@@ -22,7 +22,7 @@
  */
 package org.mrcp4j.message.header;
 
-import static org.junit.Assert.*;
+import org.junit.Assert;
 import org.junit.Test;
 import org.mrcp4j.MrcpException;
 
@@ -34,23 +34,23 @@ public class IllegalValueExceptionTest {
     @Test
     public void testDefaultConstructor() {
         IllegalValueException exception = new IllegalValueException();
-        assertNull("Message should be null", exception.getMessage());
-        assertNull("Cause should be null", exception.getCause());
+        Assert.assertNull("Message should be null", exception.getMessage());
+        Assert.assertNull("Cause should be null", exception.getCause());
     }
 
     @Test
     public void testMessageConstructor() {
         String message = "Invalid value provided";
         IllegalValueException exception = new IllegalValueException(message);
-        assertEquals("Message should match", message, exception.getMessage());
-        assertNull("Cause should be null", exception.getCause());
+        Assert.assertEquals("Message should match", message, exception.getMessage());
+        Assert.assertNull("Cause should be null", exception.getCause());
     }
 
     @Test
     public void testMessageConstructorWithNull() {
         IllegalValueException exception = new IllegalValueException((String) null);
-        assertNull("Message should be null", exception.getMessage());
-        assertNull("Cause should be null", exception.getCause());
+        Assert.assertNull("Message should be null", exception.getMessage());
+        Assert.assertNull("Cause should be null", exception.getCause());
     }
 
     @Test
@@ -58,55 +58,55 @@ public class IllegalValueExceptionTest {
         String message = "Invalid value provided";
         Exception cause = new NumberFormatException("Not a valid number");
         IllegalValueException exception = new IllegalValueException(message, cause);
-        assertEquals("Message should match", message, exception.getMessage());
-        assertEquals("Cause should match", cause, exception.getCause());
+        Assert.assertEquals("Message should match", message, exception.getMessage());
+        Assert.assertEquals("Cause should match", cause, exception.getCause());
     }
 
     @Test
     public void testMessageAndCauseConstructorWithNullMessage() {
         Exception cause = new NumberFormatException("Not a valid number");
         IllegalValueException exception = new IllegalValueException(null, cause);
-        assertNull("Message should be null", exception.getMessage());
-        assertEquals("Cause should match", cause, exception.getCause());
+        Assert.assertNull("Message should be null", exception.getMessage());
+        Assert.assertEquals("Cause should match", cause, exception.getCause());
     }
 
     @Test
     public void testMessageAndCauseConstructorWithNullCause() {
         String message = "Invalid value provided";
         IllegalValueException exception = new IllegalValueException(message, null);
-        assertEquals("Message should match", message, exception.getMessage());
-        assertNull("Cause should be null", exception.getCause());
+        Assert.assertEquals("Message should match", message, exception.getMessage());
+        Assert.assertNull("Cause should be null", exception.getCause());
     }
 
     @Test
     public void testCauseConstructor() {
         Exception cause = new NumberFormatException("Not a valid number");
         IllegalValueException exception = new IllegalValueException(cause);
-        assertEquals("Message should be cause's toString", cause.toString(), exception.getMessage());
-        assertEquals("Cause should match", cause, exception.getCause());
+        Assert.assertEquals("Message should be cause's toString", cause.toString(), exception.getMessage());
+        Assert.assertEquals("Cause should match", cause, exception.getCause());
     }
 
     @Test
     public void testCauseConstructorWithNull() {
         IllegalValueException exception = new IllegalValueException((Throwable) null);
-        assertNull("Message should be null", exception.getMessage());
-        assertNull("Cause should be null", exception.getCause());
+        Assert.assertNull("Message should be null", exception.getMessage());
+        Assert.assertNull("Cause should be null", exception.getCause());
     }
 
     @Test
     public void testInheritanceFromMrcpException() {
         IllegalValueException exception = new IllegalValueException("Test message");
-        assertTrue("Should be instance of MrcpException", exception instanceof MrcpException);
-        assertTrue("Should be instance of Exception", exception instanceof Exception);
-        assertTrue("Should be instance of Throwable", exception instanceof Throwable);
+        Assert.assertTrue("Should be instance of MrcpException", exception instanceof MrcpException);
+        Assert.assertTrue("Should be instance of Exception", exception instanceof Exception);
+        Assert.assertTrue("Should be instance of Throwable", exception instanceof Throwable);
     }
 
     @Test
     public void testStackTrace() {
         IllegalValueException exception = new IllegalValueException("Test message");
         StackTraceElement[] stackTrace = exception.getStackTrace();
-        assertNotNull("Stack trace should not be null", stackTrace);
-        assertTrue("Stack trace should have elements", stackTrace.length > 0);
+        Assert.assertNotNull("Stack trace should not be null", stackTrace);
+        Assert.assertTrue("Stack trace should have elements", stackTrace.length > 0);
     }
 
     @Test
@@ -115,9 +115,9 @@ public class IllegalValueExceptionTest {
         Exception intermediateCause = new RuntimeException("Processing error", rootCause);
         IllegalValueException exception = new IllegalValueException("Value validation failed", intermediateCause);
         
-        assertEquals("Value validation failed", exception.getMessage());
-        assertEquals(intermediateCause, exception.getCause());
-        assertEquals(rootCause, exception.getCause().getCause());
+        Assert.assertEquals("Value validation failed", exception.getMessage());
+        Assert.assertEquals(intermediateCause, exception.getCause());
+        Assert.assertEquals(rootCause, exception.getCause().getCause());
     }
 
     @Test
@@ -125,6 +125,6 @@ public class IllegalValueExceptionTest {
         // Test that the class has the @SuppressWarnings("serial") annotation
         // This is primarily a compile-time check
         IllegalValueException exception = new IllegalValueException("Test");
-        assertNotNull("Exception should be created successfully", exception);
+        Assert.assertNotNull("Exception should be created successfully", exception);
     }
 }

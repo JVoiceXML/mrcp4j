@@ -22,7 +22,7 @@
  */
 package org.mrcp4j.message.header;
 
-import static org.junit.Assert.*;
+import org.junit.Assert;
 import org.junit.Test;
 
 /**
@@ -37,8 +37,8 @@ public class VendorSpecificHeaderTest {
         
         VendorSpecificHeader header = new VendorSpecificHeader(name, value);
         
-        assertEquals("Name should match", name, header.getNameString());
-        assertEquals("Value should match", value, header.getValueString());
+        Assert.assertEquals("Name should match", name, header.getNameString());
+        Assert.assertEquals("Value should match", value, header.getValueString());
     }
 
     @Test
@@ -47,8 +47,8 @@ public class VendorSpecificHeaderTest {
         
         VendorSpecificHeader header = new VendorSpecificHeader(null, value);
         
-        assertNull("Name should be null", header.getNameString());
-        assertEquals("Value should match", value, header.getValueString());
+        Assert.assertNull("Name should be null", header.getNameString());
+        Assert.assertEquals("Value should match", value, header.getValueString());
     }
 
     @Test
@@ -57,16 +57,16 @@ public class VendorSpecificHeaderTest {
         
         VendorSpecificHeader header = new VendorSpecificHeader(name, null);
         
-        assertEquals("Name should match", name, header.getNameString());
-        assertNull("Value should be null", header.getValueString());
+        Assert.assertEquals("Name should match", name, header.getNameString());
+        Assert.assertNull("Value should be null", header.getValueString());
     }
 
     @Test
     public void testConstructorWithBothNull() {
         VendorSpecificHeader header = new VendorSpecificHeader(null, null);
         
-        assertNull("Name should be null", header.getNameString());
-        assertNull("Value should be null", header.getValueString());
+        Assert.assertNull("Name should be null", header.getNameString());
+        Assert.assertNull("Value should be null", header.getValueString());
     }
 
     @Test
@@ -76,8 +76,8 @@ public class VendorSpecificHeaderTest {
         
         VendorSpecificHeader header = new VendorSpecificHeader(name, value);
         
-        assertEquals("Name should be empty", name, header.getNameString());
-        assertEquals("Value should be empty", value, header.getValueString());
+        Assert.assertEquals("Name should be empty", name, header.getNameString());
+        Assert.assertEquals("Value should be empty", value, header.getValueString());
     }
 
     @Test
@@ -89,8 +89,8 @@ public class VendorSpecificHeaderTest {
         StringBuilder sb = new StringBuilder("prefix:");
         StringBuilder result = header.appendTo(sb);
         
-        assertSame("Should return same StringBuilder", sb, result);
-        assertEquals("Should format correctly", "prefix:X-Custom-Header:custom-value", sb.toString());
+        Assert.assertSame("Should return same StringBuilder", sb, result);
+        Assert.assertEquals("Should format correctly", "prefix:X-Custom-Header:custom-value", sb.toString());
     }
 
     @Test
@@ -102,7 +102,7 @@ public class VendorSpecificHeaderTest {
         StringBuilder sb = new StringBuilder();
         header.appendTo(sb);
         
-        assertEquals("Should format correctly", "X-Test:test-value", sb.toString());
+        Assert.assertEquals("Should format correctly", "X-Test:test-value", sb.toString());
     }
 
     @Test
@@ -112,7 +112,7 @@ public class VendorSpecificHeaderTest {
         StringBuilder sb = new StringBuilder();
         header.appendTo(sb);
         
-        assertEquals("Should handle null name", "null:value", sb.toString());
+        Assert.assertEquals("Should handle null name", "null:value", sb.toString());
     }
 
     @Test
@@ -122,7 +122,7 @@ public class VendorSpecificHeaderTest {
         StringBuilder sb = new StringBuilder();
         header.appendTo(sb);
         
-        assertEquals("Should handle null value", "name:null", sb.toString());
+        Assert.assertEquals("Should handle null value", "name:null", sb.toString());
     }
 
     @Test
@@ -134,27 +134,27 @@ public class VendorSpecificHeaderTest {
         StringBuilder sb = new StringBuilder();
         header.appendTo(sb);
         
-        assertEquals("Should handle special characters", "X-Header-With-Dashes:value/with/slashes and spaces", sb.toString());
+        Assert.assertEquals("Should handle special characters", "X-Header-With-Dashes:value/with/slashes and spaces", sb.toString());
     }
 
     @Test
     public void testInheritanceFromMrcpHeader() {
         VendorSpecificHeader header = new VendorSpecificHeader("test", "value");
-        assertTrue("Should be instance of MrcpHeader", header instanceof MrcpHeader);
+        Assert.assertTrue("Should be instance of MrcpHeader", header instanceof MrcpHeader);
     }
 
     @Test
     public void testGetHeaderName() {
         VendorSpecificHeader header = new VendorSpecificHeader("test", "value");
         // VendorSpecificHeader passes null to super constructor for header name
-        assertNull("Header name should be null", header.getHeaderName());
+        Assert.assertNull("Header name should be null", header.getHeaderName());
     }
 
     @Test
     public void testIsValidValue() {
         VendorSpecificHeader header = new VendorSpecificHeader("test", "value");
         // The value object is the same as the value string, so it should be valid
-        assertTrue("Should be valid value", header.isValidValue());
+        Assert.assertTrue("Should be valid value", header.isValidValue());
     }
 
     @Test
@@ -163,7 +163,7 @@ public class VendorSpecificHeaderTest {
         VendorSpecificHeader header = new VendorSpecificHeader("test", value);
         
         Object valueObject = header.getValueObject();
-        assertEquals("Value object should match value string", value, valueObject);
+        Assert.assertEquals("Value object should match value string", value, valueObject);
     }
 
     @Test
@@ -173,7 +173,7 @@ public class VendorSpecificHeaderTest {
         
         // toString is inherited from MrcpHeader and uses getNameString() which is overridden
         String result = header.toString();
-        assertEquals("ToString should format correctly", "test:test-value", result);
+        Assert.assertEquals("ToString should format correctly", "test:test-value", result);
     }
 
     @Test
@@ -181,7 +181,7 @@ public class VendorSpecificHeaderTest {
         VendorSpecificHeader header = new VendorSpecificHeader(null, null);
         
         String result = header.toString();
-        assertEquals("Should handle null values", "null:null", result);
+        Assert.assertEquals("Should handle null values", "null:null", result);
     }
 
     @Test
@@ -190,11 +190,11 @@ public class VendorSpecificHeaderTest {
         String customName = "X-Custom-Header";
         VendorSpecificHeader header = new VendorSpecificHeader(customName, "value");
         
-        assertEquals("Should return custom name", customName, header.getNameString());
+        Assert.assertEquals("Should return custom name", customName, header.getNameString());
         
         // Compare with parent class behavior
-        assertNull("Header name from parent should be null", header.getHeaderName());
-        assertNotEquals("Custom name should differ from parent name", 
+        Assert.assertNull("Header name from parent should be null", header.getHeaderName());
+        Assert.assertNotEquals("Custom name should differ from parent name", 
                        header.getHeaderName(), header.getNameString());
     }
 
@@ -203,12 +203,12 @@ public class VendorSpecificHeaderTest {
         VendorSpecificHeader header1 = new VendorSpecificHeader("X-Header1", "value1");
         VendorSpecificHeader header2 = new VendorSpecificHeader("X-Header2", "value2");
         
-        assertEquals("First header name should be correct", "X-Header1", header1.getNameString());
-        assertEquals("First header value should be correct", "value1", header1.getValueString());
-        assertEquals("Second header name should be correct", "X-Header2", header2.getNameString());
-        assertEquals("Second header value should be correct", "value2", header2.getValueString());
+        Assert.assertEquals("First header name should be correct", "X-Header1", header1.getNameString());
+        Assert.assertEquals("First header value should be correct", "value1", header1.getValueString());
+        Assert.assertEquals("Second header name should be correct", "X-Header2", header2.getNameString());
+        Assert.assertEquals("Second header value should be correct", "value2", header2.getValueString());
         
-        assertNotEquals("Headers should be independent", header1.getNameString(), header2.getNameString());
-        assertNotEquals("Values should be independent", header1.getValueString(), header2.getValueString());
+        Assert.assertNotEquals("Headers should be independent", header1.getNameString(), header2.getNameString());
+        Assert.assertNotEquals("Values should be independent", header1.getValueString(), header2.getValueString());
     }
 }

@@ -22,7 +22,7 @@
  */
 package org.mrcp4j.message.header;
 
-import static org.junit.Assert.*;
+import org.junit.Assert;
 import org.junit.Test;
 
 /**
@@ -38,10 +38,10 @@ public class MrcpHeaderTest {
         
         MrcpHeader header = new MrcpHeader(headerName, valueString, valueObject);
         
-        assertEquals("Header name should match", headerName, header.getHeaderName());
-        assertEquals("Value string should match", valueString, header.getValueString());
-        assertEquals("Name string should match header name toString", headerName.toString(), header.getNameString());
-        assertTrue("Should be valid value", header.isValidValue());
+        Assert.assertEquals("Header name should match", headerName, header.getHeaderName());
+        Assert.assertEquals("Value string should match", valueString, header.getValueString());
+        Assert.assertEquals("Name string should match header name toString", headerName.toString(), header.getNameString());
+        Assert.assertTrue("Should be valid value", header.isValidValue());
     }
 
     @Test
@@ -53,7 +53,7 @@ public class MrcpHeaderTest {
         MrcpHeader header = new MrcpHeader(headerName, valueString, valueObject);
         
         Object result = header.getValueObject();
-        assertEquals("Value object should match", valueObject, result);
+        Assert.assertEquals("Value object should match", valueObject, result);
     }
 
     @Test(expected = IllegalValueException.class)
@@ -63,7 +63,7 @@ public class MrcpHeaderTest {
         
         MrcpHeader header = new MrcpHeader(headerName, valueString, null);
         
-        assertFalse("Should not be valid value", header.isValidValue());
+        Assert.assertFalse("Should not be valid value", header.isValidValue());
         header.getValueObject(); // Should throw exception
     }
 
@@ -75,7 +75,7 @@ public class MrcpHeaderTest {
         
         MrcpHeader header = new MrcpHeader(headerName, valueString, throwableValue);
         
-        assertFalse("Should not be valid value", header.isValidValue());
+        Assert.assertFalse("Should not be valid value", header.isValidValue());
         header.getValueObject(); // Should throw IllegalValueException
     }
 
@@ -87,13 +87,13 @@ public class MrcpHeaderTest {
         
         MrcpHeader header = new MrcpHeader(headerName, valueString, throwableValue);
         
-        assertFalse("Should not be valid value", header.isValidValue());
+        Assert.assertFalse("Should not be valid value", header.isValidValue());
         
         try {
             header.getValueObject();
-            fail("Should have thrown IllegalValueException");
+            Assert.fail("Should have thrown IllegalValueException");
         } catch (IllegalValueException e) {
-            assertEquals("Should be the same exception", throwableValue, e);
+            Assert.assertEquals("Should be the same exception", throwableValue, e);
         }
     }
 
@@ -105,14 +105,14 @@ public class MrcpHeaderTest {
         
         MrcpHeader header = new MrcpHeader(headerName, valueString, throwableValue);
         
-        assertFalse("Should not be valid value", header.isValidValue());
+        Assert.assertFalse("Should not be valid value", header.isValidValue());
         
         try {
             header.getValueObject();
-            fail("Should have thrown IllegalValueException");
+            Assert.fail("Should have thrown IllegalValueException");
         } catch (IllegalValueException e) {
-            assertEquals("Cause should be the original throwable", throwableValue, e.getCause());
-            assertTrue("Message should contain original value string", 
+            Assert.assertEquals("Cause should be the original throwable", throwableValue, e.getCause());
+            Assert.assertTrue("Message should contain original value string", 
                       e.getMessage().contains(valueString));
         }
     }
@@ -120,19 +120,19 @@ public class MrcpHeaderTest {
     @Test
     public void testIsValidValueWithValidObject() {
         MrcpHeader header = new MrcpHeader(MrcpHeaderName.CHANNEL_IDENTIFIER, "test", "valid object");
-        assertTrue("Should be valid value", header.isValidValue());
+        Assert.assertTrue("Should be valid value", header.isValidValue());
     }
 
     @Test
     public void testIsValidValueWithNullObject() {
         MrcpHeader header = new MrcpHeader(MrcpHeaderName.CHANNEL_IDENTIFIER, "test", null);
-        assertFalse("Should not be valid value", header.isValidValue());
+        Assert.assertFalse("Should not be valid value", header.isValidValue());
     }
 
     @Test
     public void testIsValidValueWithThrowableObject() {
         MrcpHeader header = new MrcpHeader(MrcpHeaderName.CHANNEL_IDENTIFIER, "test", new RuntimeException());
-        assertFalse("Should not be valid value", header.isValidValue());
+        Assert.assertFalse("Should not be valid value", header.isValidValue());
     }
 
     @Test
@@ -145,8 +145,8 @@ public class MrcpHeaderTest {
         StringBuilder sb = new StringBuilder("prefix:");
         StringBuilder result = header.appendTo(sb);
         
-        assertSame("Should return same StringBuilder", sb, result);
-        assertEquals("Should contain header format", "prefix:" + headerName + ":" + valueString, sb.toString());
+        Assert.assertSame("Should return same StringBuilder", sb, result);
+        Assert.assertEquals("Should contain header format", "prefix:" + headerName + ":" + valueString, sb.toString());
     }
 
     @Test
@@ -159,7 +159,7 @@ public class MrcpHeaderTest {
         StringBuilder sb = new StringBuilder();
         header.appendTo(sb);
         
-        assertEquals("Should contain header format", headerName + ":" + valueString, sb.toString());
+        Assert.assertEquals("Should contain header format", headerName + ":" + valueString, sb.toString());
     }
 
     @Test
@@ -172,7 +172,7 @@ public class MrcpHeaderTest {
         String result = header.toString();
         String expected = headerName + ":" + valueString;
         
-        assertEquals("ToString should match expected format", expected, result);
+        Assert.assertEquals("ToString should match expected format", expected, result);
     }
 
     @Test
@@ -185,7 +185,7 @@ public class MrcpHeaderTest {
         String result = header.toString();
         String expected = headerName + ":" + valueString;
         
-        assertEquals("ToString should handle special characters", expected, result);
+        Assert.assertEquals("ToString should handle special characters", expected, result);
     }
 
     @Test
@@ -193,8 +193,8 @@ public class MrcpHeaderTest {
         // Testing edge cases - the constructor is package-private so we can test it
         MrcpHeader header = new MrcpHeader(MrcpHeaderName.CHANNEL_IDENTIFIER, null, null);
         
-        assertEquals("Header name should be set", MrcpHeaderName.CHANNEL_IDENTIFIER, header.getHeaderName());
-        assertNull("Value string should be null", header.getValueString());
-        assertFalse("Should not be valid value", header.isValidValue());
+        Assert.assertEquals("Header name should be set", MrcpHeaderName.CHANNEL_IDENTIFIER, header.getHeaderName());
+        Assert.assertNull("Value string should be null", header.getValueString());
+        Assert.assertFalse("Should not be valid value", header.isValidValue());
     }
 }

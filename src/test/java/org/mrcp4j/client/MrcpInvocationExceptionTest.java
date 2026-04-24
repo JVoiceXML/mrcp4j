@@ -22,7 +22,7 @@
  */
 package org.mrcp4j.client;
 
-import static org.junit.Assert.*;
+import org.junit.Assert;
 import org.junit.Test;
 import org.mrcp4j.MrcpException;
 import org.mrcp4j.message.MrcpResponse;
@@ -39,9 +39,9 @@ public class MrcpInvocationExceptionTest {
         
         MrcpInvocationException exception = new MrcpInvocationException(response);
         
-        assertEquals("Response should be stored", response, exception.getResponse());
-        assertTrue("Message should contain status code", exception.getMessage().contains("200"));
-        assertTrue("Message should contain status description", exception.getMessage().contains("STATUS_SUCCESS"));
+        Assert.assertEquals("Response should be stored", response, exception.getResponse());
+        Assert.assertTrue("Message should contain status code", exception.getMessage().contains("200"));
+        Assert.assertTrue("Message should contain status description", exception.getMessage().contains("STATUS_SUCCESS"));
     }
 
     @Test
@@ -51,9 +51,9 @@ public class MrcpInvocationExceptionTest {
         
         MrcpInvocationException exception = new MrcpInvocationException(response);
         
-        assertEquals("Response should be stored", response, exception.getResponse());
-        assertTrue("Message should contain status code", exception.getMessage().contains("401"));
-        assertTrue("Message should contain status description", exception.getMessage().contains("STATUS_METHOD_NOT_ALLOWED"));
+        Assert.assertEquals("Response should be stored", response, exception.getResponse());
+        Assert.assertTrue("Message should contain status code", exception.getMessage().contains("401"));
+        Assert.assertTrue("Message should contain status description", exception.getMessage().contains("STATUS_METHOD_NOT_ALLOWED"));
     }
 
     @Test
@@ -63,9 +63,9 @@ public class MrcpInvocationExceptionTest {
         
         MrcpInvocationException exception = new MrcpInvocationException(response);
         
-        assertEquals("Response should be stored", response, exception.getResponse());
-        assertTrue("Message should contain status code", exception.getMessage().contains("501"));
-        assertTrue("Message should contain status description", exception.getMessage().contains("STATUS_SERVER_INTERNAL_ERROR"));
+        Assert.assertEquals("Response should be stored", response, exception.getResponse());
+        Assert.assertTrue("Message should contain status code", exception.getMessage().contains("501"));
+        Assert.assertTrue("Message should contain status description", exception.getMessage().contains("STATUS_SERVER_INTERNAL_ERROR"));
     }
 
     @Test
@@ -75,9 +75,9 @@ public class MrcpInvocationExceptionTest {
         
         MrcpInvocationException exception = new MrcpInvocationException(response);
         
-        assertEquals("Response should be stored", response, exception.getResponse());
-        assertTrue("Message should contain status code", exception.getMessage().contains("999"));
-        assertTrue("Message should handle null description", exception.getMessage().contains("null"));
+        Assert.assertEquals("Response should be stored", response, exception.getResponse());
+        Assert.assertTrue("Message should contain status code", exception.getMessage().contains("999"));
+        Assert.assertTrue("Message should handle null description", exception.getMessage().contains("null"));
     }
 
     @Test
@@ -87,8 +87,8 @@ public class MrcpInvocationExceptionTest {
         
         MrcpInvocationException exception = new MrcpInvocationException(response);
         
-        assertEquals("Response should be stored", response, exception.getResponse());
-        assertTrue("Message should contain status code", exception.getMessage().contains("-1"));
+        Assert.assertEquals("Response should be stored", response, exception.getResponse());
+        Assert.assertTrue("Message should contain status code", exception.getMessage().contains("-1"));
     }
 
     @Test
@@ -98,7 +98,7 @@ public class MrcpInvocationExceptionTest {
         
         MrcpInvocationException exception = new MrcpInvocationException(response);
         
-        assertSame("Should return same response instance", response, exception.getResponse());
+        Assert.assertSame("Should return same response instance", response, exception.getResponse());
     }
 
     @Test
@@ -108,9 +108,9 @@ public class MrcpInvocationExceptionTest {
         
         MrcpInvocationException exception = new MrcpInvocationException(response);
         
-        assertTrue("Should be instance of MrcpException", exception instanceof MrcpException);
-        assertTrue("Should be instance of Exception", exception instanceof Exception);
-        assertTrue("Should be instance of Throwable", exception instanceof Throwable);
+        Assert.assertTrue("Should be instance of MrcpException", exception instanceof MrcpException);
+        Assert.assertTrue("Should be instance of Exception", exception instanceof Exception);
+        Assert.assertTrue("Should be instance of Throwable", exception instanceof Throwable);
     }
 
     @Test
@@ -121,10 +121,10 @@ public class MrcpInvocationExceptionTest {
         MrcpInvocationException exception = new MrcpInvocationException(response);
         
         String message = exception.getMessage();
-        assertNotNull("Message should not be null", message);
-        assertTrue("Message should start with 'MRCPv2 Status Code:'", message.startsWith("MRCPv2 Status Code:"));
-        assertTrue("Message should contain status code", message.contains("407"));
-        assertTrue("Message should be formatted correctly", message.contains("[STATUS_OPERATION_FAILED]"));
+        Assert.assertNotNull("Message should not be null", message);
+        Assert.assertTrue("Message should start with 'MRCPv2 Status Code:'", message.startsWith("MRCPv2 Status Code:"));
+        Assert.assertTrue("Message should contain status code", message.contains("407"));
+        Assert.assertTrue("Message should be formatted correctly", message.contains("[STATUS_OPERATION_FAILED]"));
     }
 
     @Test
@@ -135,8 +135,8 @@ public class MrcpInvocationExceptionTest {
         MrcpInvocationException exception = new MrcpInvocationException(response);
         
         StackTraceElement[] stackTrace = exception.getStackTrace();
-        assertNotNull("Stack trace should not be null", stackTrace);
-        assertTrue("Stack trace should have elements", stackTrace.length > 0);
+        Assert.assertNotNull("Stack trace should not be null", stackTrace);
+        Assert.assertTrue("Stack trace should have elements", stackTrace.length > 0);
     }
 
     @Test
@@ -150,10 +150,10 @@ public class MrcpInvocationExceptionTest {
         MrcpInvocationException exception1 = new MrcpInvocationException(response1);
         MrcpInvocationException exception2 = new MrcpInvocationException(response2);
         
-        assertEquals("First exception should have first response", response1, exception1.getResponse());
-        assertEquals("Second exception should have second response", response2, exception2.getResponse());
-        assertNotEquals("Exceptions should have different responses", exception1.getResponse(), exception2.getResponse());
-        assertNotEquals("Messages should be different", exception1.getMessage(), exception2.getMessage());
+        Assert.assertEquals("First exception should have first response", response1, exception1.getResponse());
+        Assert.assertEquals("Second exception should have second response", response2, exception2.getResponse());
+        Assert.assertNotEquals("Exceptions should have different responses", exception1.getResponse(), exception2.getResponse());
+        Assert.assertNotEquals("Messages should be different", exception1.getMessage(), exception2.getMessage());
     }
 
     @Test
@@ -183,10 +183,10 @@ public class MrcpInvocationExceptionTest {
             
             MrcpInvocationException exception = new MrcpInvocationException(response);
             
-            assertNotNull("Message should not be null for status " + statusCode, exception.getMessage());
-            assertTrue("Message should contain status code for " + statusCode, 
+            Assert.assertNotNull("Message should not be null for status " + statusCode, exception.getMessage());
+            Assert.assertTrue("Message should contain status code for " + statusCode, 
                       exception.getMessage().contains(String.valueOf(statusCode)));
-            assertEquals("Response should match for status " + statusCode, response, exception.getResponse());
+            Assert.assertEquals("Response should match for status " + statusCode, response, exception.getResponse());
         }
     }
 }

@@ -22,7 +22,7 @@
  */
 package org.mrcp4j.util;
 
-import static org.junit.Assert.*;
+import org.junit.Assert;
 import org.junit.Test;
 
 /**
@@ -34,28 +34,28 @@ public class ObjectWrapperTest {
     public void testConstructorWithStringObject() {
         String testString = "test string";
         ObjectWrapper<String> wrapper = new ObjectWrapper<String>(testString);
-        assertEquals("Should return wrapped string", testString, wrapper.getObject());
+        Assert.assertEquals("Should return wrapped string", testString, wrapper.getObject());
     }
 
     @Test
     public void testConstructorWithIntegerObject() {
         Integer testInteger = 42;
         ObjectWrapper<Integer> wrapper = new ObjectWrapper<Integer>(testInteger);
-        assertEquals("Should return wrapped integer", testInteger, wrapper.getObject());
+        Assert.assertEquals("Should return wrapped integer", testInteger, wrapper.getObject());
     }
 
     @Test
     public void testConstructorWithNullObject() {
         ObjectWrapper<String> wrapper = new ObjectWrapper<String>(null);
-        assertNull("Should return null", wrapper.getObject());
+        Assert.assertNull("Should return null", wrapper.getObject());
     }
 
     @Test
     public void testConstructorWithComplexObject() {
         StringBuilder testBuilder = new StringBuilder("test");
         ObjectWrapper<StringBuilder> wrapper = new ObjectWrapper<StringBuilder>(testBuilder);
-        assertEquals("Should return wrapped StringBuilder", testBuilder, wrapper.getObject());
-        assertEquals("Content should match", "test", wrapper.getObject().toString());
+        Assert.assertEquals("Should return wrapped StringBuilder", testBuilder, wrapper.getObject());
+        Assert.assertEquals("Content should match", "test", wrapper.getObject().toString());
     }
 
     @Test
@@ -63,7 +63,7 @@ public class ObjectWrapperTest {
         String testString = "test";
         ObjectWrapper<String> wrapper = new ObjectWrapper<String>(testString);
         String result = wrapper.getObject();
-        assertEquals("Should be same string", testString, result);
+        Assert.assertEquals("Should be same string", testString, result);
     }
 
     @Test
@@ -71,7 +71,7 @@ public class ObjectWrapperTest {
         Integer testInteger = 123;
         ObjectWrapper<Integer> wrapper = new ObjectWrapper<Integer>(testInteger);
         Integer result = wrapper.getObject();
-        assertEquals("Should be same integer", testInteger, result);
+        Assert.assertEquals("Should be same integer", testInteger, result);
     }
 
     @Test
@@ -79,7 +79,7 @@ public class ObjectWrapperTest {
         Object testObject = new Object();
         ObjectWrapper<Object> wrapper = new ObjectWrapper<Object>(testObject);
         Object result = wrapper.getObject();
-        assertSame("Should be same object reference", testObject, result);
+        Assert.assertSame("Should be same object reference", testObject, result);
     }
 
     @Test
@@ -90,9 +90,9 @@ public class ObjectWrapperTest {
         ObjectWrapper<String> wrapper1 = new ObjectWrapper<String>(string1);
         ObjectWrapper<String> wrapper2 = new ObjectWrapper<String>(string2);
         
-        assertEquals("First wrapper should return first string", string1, wrapper1.getObject());
-        assertEquals("Second wrapper should return second string", string2, wrapper2.getObject());
-        assertNotEquals("Wrapped objects should be different", wrapper1.getObject(), wrapper2.getObject());
+        Assert.assertEquals("First wrapper should return first string", string1, wrapper1.getObject());
+        Assert.assertEquals("Second wrapper should return second string", string2, wrapper2.getObject());
+        Assert.assertNotEquals("Wrapped objects should be different", wrapper1.getObject(), wrapper2.getObject());
     }
 
     @Test
@@ -103,8 +103,8 @@ public class ObjectWrapperTest {
         // Create another wrapper with null
         ObjectWrapper<String> nullWrapper = new ObjectWrapper<String>(null);
         
-        assertEquals("Original wrapper should still work", original, wrapper.getObject());
-        assertNull("Null wrapper should return null", nullWrapper.getObject());
+        Assert.assertEquals("Original wrapper should still work", original, wrapper.getObject());
+        Assert.assertNull("Null wrapper should return null", nullWrapper.getObject());
     }
 
     @Test
@@ -115,16 +115,16 @@ public class ObjectWrapperTest {
         // Modify the wrapped object
         mutableObject.append(" modified");
         
-        assertEquals("Should reflect changes to wrapped object", "initial modified", wrapper.getObject().toString());
+        Assert.assertEquals("Should reflect changes to wrapped object", "initial modified", wrapper.getObject().toString());
     }
 
     @Test
     public void testNullAfterCreation() {
         ObjectWrapper<String> wrapper = new ObjectWrapper<String>("test");
-        assertEquals("Should initially return test", "test", wrapper.getObject());
+        Assert.assertEquals("Should initially return test", "test", wrapper.getObject());
         
         // Create new wrapper with null to test null handling
         ObjectWrapper<String> nullWrapper = new ObjectWrapper<String>(null);
-        assertNull("New null wrapper should return null", nullWrapper.getObject());
+        Assert.assertNull("New null wrapper should return null", nullWrapper.getObject());
     }
 }
