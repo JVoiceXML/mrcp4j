@@ -22,77 +22,88 @@
  */
 package org.mrcp4j.server;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.Socket;
+import java.text.ParseException;
+
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 import org.mrcp4j.MrcpRequestState;
 import org.mrcp4j.message.MrcpEvent;
 import org.mrcp4j.message.MrcpResponse;
+import org.mrcp4j.message.header.IllegalValueException;
 import org.mrcp4j.message.request.MrcpRequest;
-
-import org.apache.mina.core.service.IoHandlerAdapter;
-import org.apache.mina.core.session.IoSession;
 
 /**
  *
  * @author Niels Godfredsen {@literal <}<a href="mailto:ngodfredsen@users.sourceforge.net">ngodfredsen@users.sourceforge.net</a>{@literal >}
  */
-public class MrcpProtocolHandler extends IoHandlerAdapter {
+public class MrcpProtocolHandler implements Runnable {
 
-    private MrcpRequestProcessor _requestProcessor;
+    private static Logger _log = LogManager.getLogger(MrcpProtocolHandler.class);
 
-    public MrcpProtocolHandler(MrcpRequestProcessor requestProcessor) {
+    private final MrcpRequestProcessor _requestProcessor;
+    private final Socket _socket;
+
+    public MrcpProtocolHandler(MrcpRequestProcessor requestProcessor, Socket socket) {
         _requestProcessor = requestProcessor;
+        _socket = socket;
     }
 
-    /* (non-Javadoc)
-     * @see org.apache.mina.protocol.ProtocolHandler#exceptionCaught(org.apache.mina.protocol.ProtocolSession, java.lang.Throwable)
-     */
     @Override
-    public void exceptionCaught(IoSession session, Throwable cause) {
-        // close connection when unexpected exception is caught.
-        session.closeNow();
-    }
+    public void run() {
+        _log.debug("OPENED");
+        try {
+            InputStream in = _socket.getInputStream();
+            OutputStream out = _socket.getOutputStream();
+            MrcpRequestDecoder decoder = new MrcpRequestDecoder();
+            MrcpMessageEncoder encoder = new MrcpMessageEncoder();
 
-    /* (non-Javadoc)
-     * @see org.apache.mina.protocol.ProtocolHandler#messageReceived(org.apache.mina.protocol.ProtocolSession, java.lang.Object)
-     */
-    @Override
-    public void messageReceived(IoSession session, Object message) {
-        MrcpRequest request = (MrcpRequest) message;
-        new EventThread(_requestProcessor, session, request).start(); // TODO: move threading down chain
-    }
-
-    private static class EventThread extends Thread {
-
-        private MrcpRequestProcessor _requestProcessor;
-        private IoSession _session;
-        private MrcpRequest _request;
-
-        EventThread(MrcpRequestProcessor requestProcessor, IoSession session, MrcpRequest request) {
-            _request = request;
-            _requestProcessor = requestProcessor;
-            _session = session;
-        }
-
-        /* (non-Javadoc)
-         * @see java.lang.Runnable#run()
-         */
-        @Override
-        public void run() {
-            MrcpResponse response = _requestProcessor.processRequest(_request);
-            _session.write(response);
-
-            MrcpRequestState requestState = response.getRequestState();
-
-            while (!requestState.equals(MrcpRequestState.COMPLETE) && !_session.isClosing()) {
-                MrcpEvent event = _requestProcessor.getNextEvent(_request);
-                if (event != null) {
-                    _session.write(event);
-                    requestState = event.getRequestState();
-                } else {
+            while (!_socket.isClosed()) {
+                MrcpRequest request;
+                try {
+                    request = decoder.decode(in);
+                    if (request == null) {
+                        break;
+                    }
+                } catch (ParseException e) {
+                    _log.debug(e, e);
+                    break;
+                } catch (IllegalValueException e) {
+                    _log.debug(e, e);
                     break;
                 }
+
+                processRequest(request, out, encoder);
+            }
+        } catch (IOException e) {
+            _log.warn("Connection error: " + e.getMessage(), e);
+        } finally {
+            try {
+                _socket.close();
+            } catch (IOException e) {
+                _log.debug("Error closing socket", e);
+            }
+            _log.debug("CLOSED");
+        }
+    }
+
+    private void processRequest(MrcpRequest request, OutputStream out, MrcpMessageEncoder encoder) throws IOException {
+        MrcpResponse response = _requestProcessor.processRequest(request);
+        encoder.encode(response, out);
+
+        MrcpRequestState requestState = response.getRequestState();
+
+        while (!requestState.equals(MrcpRequestState.COMPLETE) && !_socket.isClosed()) {
+            MrcpEvent event = _requestProcessor.getNextEvent(request);
+            if (event != null) {
+                encoder.encode(event, out);
+                requestState = event.getRequestState();
+            } else {
+                break;
             }
         }
     }
-
-
 }

@@ -23,14 +23,14 @@
 package org.mrcp4j.server;
 
 import java.io.IOException;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.TimeoutException;
 
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
-import org.apache.mina.core.service.IoAcceptor;
-import org.apache.mina.filter.codec.ProtocolCodecFilter;
-import org.apache.mina.transport.socket.nio.NioSocketAcceptor;
-import java.net.InetSocketAddress;
 import org.mrcp4j.MrcpEventName;
 import org.mrcp4j.MrcpRequestState;
 import org.mrcp4j.MrcpResourceType;
@@ -42,7 +42,6 @@ import org.mrcp4j.server.delegator.RecorderRequestDelegator;
 import org.mrcp4j.server.delegator.SpeakVerifyRequestDelegator;
 import org.mrcp4j.server.delegator.SpeechSynthRequestDelegator;
 import org.mrcp4j.server.delegator.VoiceEnrollmentRequestDelegator;
-import org.mrcp4j.server.mina.IoTextLoggingFilter;
 import org.mrcp4j.server.provider.RecogOnlyRequestHandler;
 import org.mrcp4j.server.provider.RecorderRequestHandler;
 import org.mrcp4j.server.provider.SpeakVerifyRequestHandler;
@@ -55,12 +54,11 @@ import org.mrcp4j.server.provider.VoiceEnrollmentRequestHandler;
  */
 public class MrcpServerSocket {
 
-	private static Logger _log = LogManager.getLogger(MrcpServerSocket.class);
-
-    private static MrcpCodecFactory CODEC_FACTORY = new MrcpCodecFactory();
+    private static Logger _log = LogManager.getLogger(MrcpServerSocket.class);
 
     private MrcpRequestProcessorImpl _requestProcessorImpl;
-    private IoAcceptor _acceptor;
+    private ServerSocket _serverSocket;
+    private ExecutorService _executor;
     private int _port;
 
     /**
@@ -71,28 +69,15 @@ public class MrcpServerSocket {
      */
     public MrcpServerSocket(int port) throws IOException {
         _port = port;
-
         _requestProcessorImpl = new MrcpRequestProcessorImpl();
+        _serverSocket = new ServerSocket(port);
+        _executor = Executors.newCachedThreadPool();
 
-        // Create acceptor
-        _acceptor = new NioSocketAcceptor();
-        
-        // Add logging filter
-        _acceptor.getFilterChain().addLast("logger", new IoTextLoggingFilter());
-        
-        // Add codec filter
-        _acceptor.getFilterChain().addLast("codec", new ProtocolCodecFilter(CODEC_FACTORY));
-        
-        // Set handler
-        _acceptor.setHandler(new MrcpProtocolHandler(_requestProcessorImpl));
-        
-        // Bind to port
-        _acceptor.bind(new InetSocketAddress(port));
+        _executor.submit(new AcceptThread());
 
         if (_log.isDebugEnabled()) {
             _log.debug("MRCPv2 protocol provider listening on port " + port);
         }
-
     }
 
     /**
@@ -150,8 +135,32 @@ public class MrcpServerSocket {
     }
 
     public void dispose() {
-        if (_acceptor != null) {
-            _acceptor.dispose();
+        _executor.shutdownNow();
+        if (_serverSocket != null && !_serverSocket.isClosed()) {
+            try {
+                _serverSocket.close();
+            } catch (IOException e) {
+                _log.debug("Error closing server socket", e);
+            }
+        }
+    }
+
+    private class AcceptThread implements Runnable {
+        @Override
+        public void run() {
+            while (!_serverSocket.isClosed()) {
+                try {
+                    Socket socket = _serverSocket.accept();
+                    if (_log.isDebugEnabled()) {
+                        _log.debug("Accepted connection from " + socket.getRemoteSocketAddress());
+                    }
+                    _executor.submit(new MrcpProtocolHandler(_requestProcessorImpl, socket));
+                } catch (IOException e) {
+                    if (!_serverSocket.isClosed()) {
+                        _log.warn("Error accepting connection: " + e.getMessage(), e);
+                    }
+                }
+            }
         }
     }
 

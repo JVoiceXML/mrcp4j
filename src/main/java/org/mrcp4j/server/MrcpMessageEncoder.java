@@ -24,16 +24,13 @@ package org.mrcp4j.server;
 
 import static org.mrcp4j.message.MrcpMessage.CRLF;
 
+import java.io.IOException;
+import java.io.OutputStream;
+
 import org.mrcp4j.message.MrcpEvent;
 import org.mrcp4j.message.MrcpResponse;
 import org.mrcp4j.message.MrcpServerMessage;
 import org.mrcp4j.message.header.MrcpHeader;
-
-import org.apache.mina.core.buffer.IoBuffer;
-import org.apache.mina.core.session.IoSession;
-import org.apache.mina.filter.codec.ProtocolEncoder;
-import org.apache.mina.filter.codec.ProtocolEncoderOutput;
-import org.apache.mina.filter.codec.ProtocolEncoderException;
 
 
 /**
@@ -41,12 +38,11 @@ import org.apache.mina.filter.codec.ProtocolEncoderException;
  *
  * @author Niels Godfredsen {@literal <}<a href="mailto:ngodfredsen@users.sourceforge.net">ngodfredsen@users.sourceforge.net</a>{@literal >}
  */
-public class MrcpMessageEncoder implements ProtocolEncoder {
+public class MrcpMessageEncoder {
 
     private StringBuilder _encodeBuf = new StringBuilder();
 
-    public void encode(IoSession session, Object message, ProtocolEncoderOutput out)
-      throws Exception {
+    public void encode(Object message, OutputStream out) throws IOException {
 
         // clear encode buffer
         _encodeBuf.delete(0, _encodeBuf.length());
@@ -58,7 +54,7 @@ public class MrcpMessageEncoder implements ProtocolEncoder {
         } else if (message instanceof MrcpEvent) {
             offset = appendEventLine(_encodeBuf, ((MrcpEvent) message));
         } else {
-            throw new ProtocolEncoderException("Unsupported message type: " + message.getClass().getName());
+            throw new IOException("Unsupported message type: " + message.getClass().getName());
         }
 
         // append headers
@@ -88,12 +84,12 @@ public class MrcpMessageEncoder implements ProtocolEncoder {
         bufferLength = _encodeBuf.length();
 
         // write _encodeBuf to out
-        IoBuffer bytes = IoBuffer.allocate(bufferLength);
+        byte[] bytes = new byte[bufferLength];
         for (int i = 0; i < bufferLength; i++) {
-            bytes.put((byte) _encodeBuf.charAt(i));
+            bytes[i] = (byte) _encodeBuf.charAt(i);
         }
-        bytes.flip();
         out.write(bytes);
+        out.flush();
     }
 
     private static int appendEventLine(StringBuilder encodeBuf, MrcpEvent event) {
@@ -116,10 +112,5 @@ public class MrcpMessageEncoder implements ProtocolEncoder {
         encodeBuf.append(' ').append(response.getRequestState());
         encodeBuf.append(CRLF);
         return version.length() + 1;
-    }
-
-    @Override
-    public void dispose(IoSession session) throws Exception {
-        // No resources to clean up
     }
 }
