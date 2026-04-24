@@ -59,6 +59,7 @@ public class MrcpServerSocket {
     private MrcpRequestProcessorImpl _requestProcessorImpl;
     private ServerSocket _serverSocket;
     private ExecutorService _executor;
+    private volatile boolean _disposed = false;
     private int _port;
 
     /**
@@ -135,7 +136,7 @@ public class MrcpServerSocket {
     }
 
     public void dispose() {
-        _executor.shutdownNow();
+        _disposed = true;
         if (_serverSocket != null && !_serverSocket.isClosed()) {
             try {
                 _serverSocket.close();
@@ -143,12 +144,21 @@ public class MrcpServerSocket {
                 _log.debug("Error closing server socket", e);
             }
         }
+        _executor.shutdown();
+        try {
+            if (!_executor.awaitTermination(5, java.util.concurrent.TimeUnit.SECONDS)) {
+                _executor.shutdownNow();
+            }
+        } catch (InterruptedException e) {
+            _executor.shutdownNow();
+            Thread.currentThread().interrupt();
+        }
     }
 
     private class AcceptThread implements Runnable {
         @Override
         public void run() {
-            while (!_serverSocket.isClosed()) {
+            while (!_disposed && !_serverSocket.isClosed()) {
                 try {
                     Socket socket = _serverSocket.accept();
                     if (_log.isDebugEnabled()) {
@@ -156,7 +166,7 @@ public class MrcpServerSocket {
                     }
                     _executor.submit(new MrcpProtocolHandler(_requestProcessorImpl, socket));
                 } catch (IOException e) {
-                    if (!_serverSocket.isClosed()) {
+                    if (!_disposed) {
                         _log.warn("Error accepting connection: " + e.getMessage(), e);
                     }
                 }

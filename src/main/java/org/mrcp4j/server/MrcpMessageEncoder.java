@@ -84,11 +84,7 @@ public class MrcpMessageEncoder {
         bufferLength = _encodeBuf.length();
 
         // write _encodeBuf to out
-        byte[] bytes = new byte[bufferLength];
-        for (int i = 0; i < bufferLength; i++) {
-            bytes[i] = (byte) _encodeBuf.charAt(i);
-        }
-        out.write(bytes);
+        out.write(_encodeBuf.toString().getBytes(java.nio.charset.StandardCharsets.UTF_8));
         out.flush();
     }
 

@@ -70,6 +70,9 @@ public class MrcpRequestDecoder {
             contentLength = ((Integer) contentLengthHeader.getValueObject()).intValue();
         }
         if (contentLength > 0) {
+            if (contentLength > 1024 * 1024) { // 1 MB limit
+                throw new IOException("Content length exceeds maximum allowed size: " + contentLength);
+            }
             byte[] body = new byte[contentLength];
             int read = 0;
             while (read < contentLength) {
@@ -79,7 +82,7 @@ public class MrcpRequestDecoder {
                 }
                 read += n;
             }
-            request.setContent(new String(body, 0, contentLength));
+            request.setContent(new String(body, 0, contentLength, java.nio.charset.StandardCharsets.UTF_8));
         }
 
         return request;
